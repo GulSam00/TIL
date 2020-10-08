@@ -141,3 +141,8 @@ http://는 HyperText Transfer Protocol의 약자. Transfer는 전송이라는 �
 |---|:---:|---:|
 | '교양' | 'O' | 'X' |
 | '직업' | 'X' | 'O' |
+
+---
+## 코딩교육 그래프
+
+![사진1]
