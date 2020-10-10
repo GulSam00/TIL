@@ -6,7 +6,9 @@
 
 * [혁명적 변화](#혁명적-변화)
 
-* [CSS 속성을 스스로 알아내는 방법](#CSS-속성을-스스로-알아내는-방법)
+* [CSS 속성(Property)을 스스로 알아내는 방법](#CSS-속성을-스스로-알아내는-방법)
+
+* [CSS 선택자(Selector)를 스스로 알아내는 방법](#CSS-선택자를-스스로-알아내는-방법)
 
 ---
 
@@ -121,4 +123,112 @@ text-decoration: underline;
 ---
 
 ## CSS 속성을 스스로 알아내는 방법
+
+CSS + [] + property 로 검색
+
+크기와 관련된 property
+
+```
+div.a {
+  font-size: 15px;
+}
+
+div.b {
+  font-size: large;
+}
+
+div.c {
+  font-size: 150%;
+}
+```
+
+정렬과 관련된 property
+
+```
+div.a {
+  text-align: center;
+}
+
+div.b {
+  text-align: left;
+}
+
+div.c {
+  text-align: right;
+}
+
+div.c {
+  text-align: justify;
+}
+```
+
+! 모든 걸 기억하지 않아도 검색 몇 번이면 정보를 찾을 수 있다
+
+! 뇌를 이기는 의지는 없다. 뇌를 혹사시키면 뇌는 수단과 방법을 가리지 않고 그 일을 하지 않을 방법을 찾을 것이다.
+
+---
+
+## CSS 선택자를 스스로 알아내는 방법
+
+### class 선택자
+
+```
+  .saw {
+    color:gray;
+  }
+
+#active {
+  color:red;
+}
+  
+  <li><a href="1.html"class="saw">HTML</a></li>
+  <li><a href="2.html"class="saw" id="active">CSS</a></li>  <!-- class="[]", saw : html -->
+  <li><a href="3.html">JavaScript</a></li>
+```
+saw라고만 쓰면 웹페이지의 모든 saw라는 이름의 태그를 선택하는 선택자
+
+class가 saw인 태그만 선택하려면 앞에 .을 붙인다.
+
+---
+
+#### class란?
+
+* 특정 의도에 따라 하나로 그룹핑한다 라는 뜻이 포함되어 있다.
+* 여러 개의 값이 들어올 수 있다. 
+* 띄어쓰기로 구분한다.
+* 하나의 태그에 여러 개의 속성이 들어올 수 있다
+* 여러 개의 선택자를 통해 하나의 태그를 공동으로 제어할 수 있다.
+* 
+---
+
+### id 선택자
+
+
+```
+  .saw {
+    color:gray;
+  }
+
+#active {
+  color:red;
+}
+  
+  <li><a href="1.html"class="saw">HTML</a></li>
+  <li><a href="2.html"class="saw" id="active">CSS</a></li>  <!-- class="[]", saw : html -->
+  <li><a href="3.html">JavaScript</a></li>
+```
+
+---
+
+### 이론 정리
+
+
+* id 선택자의 값은 한 웹페이지에서 단 한 번만 등장할 수 있다. (중복등장해서는 안 된다)
+* id 선택자는 class보다 우선순위에 있다.
+* class 선택자는 tag(elements) 선택자보다 우선순위에 있다.
+* 동일한 순위라면 마지막에 등장하는 선택자가 우선순위에 있다.
+* **tag 선택자 < class 선택자 < id 선택자**
+
+---
+
 
