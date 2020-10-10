@@ -311,3 +311,28 @@ margin:20px;
 
    
 웹페이지에서 우클릭 후 검사를 누르면 태그가 어떤 CSS의 영향을 받는지 일목요연하게 알 수 있다.
+
+---
+
+## 박스 모델 응용
+
+```
+    <style>
+h1 {
+    font-size:80px;
+    text-align:center;
+    border-bottom:1px solid black;
+    margin: 0px;
+    padding: 20px;
+  }
+  ol {
+    width:100px;
+    border-right:1px solid black;
+    margin:0px;
+    padding:20px;
+  }
+  body{
+    margin:0px;
+  }
+  </style>
+  ```
