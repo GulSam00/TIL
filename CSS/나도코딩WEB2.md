@@ -80,11 +80,13 @@ HTML이 정보에 전념할 수 있게끔 하기 위해
 
 
 1. 속성을 통해
+
     ```
     <body>
     <li><a href="2.html" style="color:red">CSS</a></li>
     </body>  
     ```
+    
 <body>안에서의 *<style>*은 HTML의 속성이다.
     
 값으로 반드시 CSS의 효과가 들어온다는 약속이 되어있다.
