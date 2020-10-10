@@ -1,4 +1,7 @@
 # 나도코딩 WEB1
+
+* [#13 문서의 구조](#문서의-구조)
+* [#14 태그의 제왕](#태그의-제왕)
 * [#16 원시웹](#원시웹)
 * [#17 인터넷을 여는 열쇠 : 서버와 클라이언트](#인터넷을-여는-열쇠---서버와-클라이언트)
 * [#18 웹호스팅](#웹호스팅)
@@ -11,6 +14,41 @@
 * [부록 - 채팅 기능 추가](#부록---채팅-기능-추가)
 * [부록 - 방문자 분석기](#부록---방문자-분석기)
 
+## 문서의 구조
+
+```
+<!doctype html>
+<html>
+<head>
+  <title>WEB1 - html</title>
+  <meta charset="utf-8">
+   </head>
+  <body>
+ </body>
+</html>
+```
+
+* <!doctype html> : 웹페이지가 HTML로 만들어졌다는 것을 표현하기 위한 설명
+* html : head 태그와 body 태그를 감싸는 태그
+* head : 본문을 설명하는 태그
+* body : 본문에 해당하는 태그
+* title : 제목을 지정하는 태그, 검색엔진이 웹페이지를 분석할 때 영향을 준다.
+* <meta charset="utf-8"> : UTF-8방식으로 해석해서 열라는 뜻?
+
+---
+
+## 태그의 제왕
+
+```
+<p><a href="https://www.w3.org/TR/html5/" target="_blank" title="html5 specification">Hypertext Markup Language (HTML)</a>
+```
+
+* a : 링크, 닻(anchor)의 약자
+* href : **H**yperText **Ref**erence의 약자
+* target="_blank" : 링크를 클릭했을 때 새 페이지가 열리게 하는 속성
+* title="[]" : 커서를 가져갔을 때 툴팁으로 나타날 내용
+
+---
 
 ## 원시웹
 
