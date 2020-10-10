@@ -10,6 +10,8 @@
 
 * [CSS 선택자(Selector)를 스스로 알아내는 방법](#CSS-선택자를-스스로-알아내는-방법)
 
+* [박스 모델](#박스-모델)
+
 ---
 
 ## CSS 등장 이전의 상황
@@ -222,7 +224,6 @@ class가 saw인 태그만 선택하려면 앞에 .을 붙인다.
 
 ### 이론 정리
 
-
 * id 선택자의 값은 한 웹페이지에서 단 한 번만 등장할 수 있다. (중복등장해서는 안 된다)
 * id 선택자는 class보다 우선순위에 있다.
 * class 선택자는 tag(elements) 선택자보다 우선순위에 있다.
@@ -231,4 +232,76 @@ class가 saw인 태그만 선택하려면 앞에 .을 붙인다.
 
 ---
 
+## 박스 모델
 
+```
+    <style>
+      h1{
+        border-width:5px;
+        border-color:red;
+        border-style:solid;
+      }
+      a{
+        border-width:5px;
+        border-color:red;
+        border-style:solid;
+      }
+    </style>
+
+```
+제목 태그(h1)은 화면 전체를 사용하며 줄바꿈을 된다. 
+
+링크(a)는 줄바꿈을 하지 않고 자기 콘텐츠만큼의 공간을 사용한다.
+
+전체를 쓰는 태그 : block level element(tag)
+자기 크기만큼을 쓰는 태그 : inline element(tag)
+
+```
+h1{
+        border-width:5px;
+        border-color:red;
+        border-style:solid;
+        display:inline or block;
+      }
+```
+
+block level element와 inline element는 display 속성의 기본값일 뿐 CSS를 통해 얼마든지 바꿀 수 있다.
+
+---
+
+### CSS 박스 모델
+
+```
+display:none;
+```
+으로 태그를 안보이게 할 수 있다.
+
+```
+hi, a {
+  border:5px solid red;
+}
+```
+선택자에서 콤마(,)를 통해 중복을 줄일 수 있다.
+
+```
+  width:100px;
+  height:50px;
+```
+콘텐츠의 폭과 높이를 조절한다.
+
+```
+padding:20px;
+```
+콘텐츠와 테두리 사이의 간격을 조절한다.
+
+```
+border:5px solid:red;
+```
+테두리 값을 조절한다.
+
+```
+margin:20px;
+```
+테두리와 테두리 사이의 간격을 조절한다.
+
+웹페이지에서 우클릭 후 검사를 누르면 태그가 어떤 CSS의 영향을 받는지 일목요연하게 알 수 있다.
