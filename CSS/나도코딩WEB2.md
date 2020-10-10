@@ -253,7 +253,7 @@ class가 saw인 태그만 선택하려면 앞에 .을 붙인다.
 
 링크(a)는 줄바꿈을 하지 않고 자기 콘텐츠만큼의 공간을 사용한다.
 
-전체를 쓰는 태그 : block level element(tag)
+전체를 쓰는 태그 : block level element(tag)    
 자기 크기만큼을 쓰는 태그 : inline element(tag)
 
 ```
