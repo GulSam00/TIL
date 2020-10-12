@@ -480,3 +480,43 @@ fr : 화면 전체를 X만큼 화면 전체를 쓰게 자동으로 조정되는 
 - 화면의 폭이 최소 800px이라면 (800px 이상이라면) 중괄호 안의 값을 실행한다.
 - **특정 조건을 만족했을 때면 CSS의 내용이 동작하도록 하게끔 할 수 있다.**<br/>
 ㄴ미디어 쿼리
+
+---
+
+### 미디어 쿼리를 이용한 반응형 디자인 구현
+
+직접 작성
+```
+  @media(max-width:400px)
+    {
+#grid{
+  display: block;
+  grid-template-rows: 100px 1fr;
+}
+#grid ol {
+  border-right:0px;
+}
+#article {
+  border-top:1px solid black;
+  border-bottom:1px solid black;
+}
+    }
+```
+- 400px보다 작을 때 미디어쿼리 적용
+- 기존 그리드는 그래도 두고 같은 열이 아닌 같은 행으로 변경
+- 수직으로 있던 border(테두리)를 #article을 기준으로 위 아래로 변경
+
+강의 예문
+```
+ @media(max-width:800px){
+      #grid{
+        display: block;
+      }
+      ol{
+        border-right:none;
+      }
+      h1 {
+        border-bottom:none;
+      }
+    }
+```
