@@ -345,9 +345,9 @@ h1 {
 
 순전히 디자인만을 위해 존재하는 아무런 의미도 없는 태그
 
-<div> : block level element    
+div : block level element    
     
-<span> : inline level element
+span : inline level element
     
 ```
   <head>
@@ -389,10 +389,20 @@ fr : 화면 전체를 X만큼 화면 전체를 쓰게 자동으로 조정되는 
 ```
 <head>
   <style>
-    #grid{
-      display: grid;
-      grid-template-columns: 150px 1fr;
-    }
+     #grid ol {
+    width:100px;
+    border-right:1px solid black;
+    padding:20px;
+    padding-left: 32px;
+    margin:0px;
+  }
+  #grid{
+    display: grid;
+    grid-template-columns: 150px 1fr;
+  }
+  #article{
+    padding-left: 25px;
+  }
     </style>
   </head>
   
@@ -413,5 +423,9 @@ fr : 화면 전체를 X만큼 화면 전체를 쓰게 자동으로 조정되는 
   </body>
 ```
 
+- 본문의 요소들을 div 태그로 감싸고 본문의 div와 ol을 또 하나의 부모 태그인 div로 감싸준다.
 - 그리드를 응용하여 요소(elements)들을 같은 열(columns)에 배치할 수 있다.
+- 본문에서 리스트를 사용할 수도 있으니 선택자를 id grid의 자식태그라는 의미인 #grid ol이라고 수정한다.
 - 열 : columns, 행 : rows
+
+**창의 크기를 조절하거나 요소의 변화에 따라 그리드가 자동으로 조정된다.**
