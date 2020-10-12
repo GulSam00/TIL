@@ -343,3 +343,75 @@ h1 {
 
 ## 그리드
 
+순전히 디자인만을 위해 존재하는 아무런 의미도 없는 태그
+
+<div> : block level element    
+    
+<span> : inline level element
+    
+```
+  <head>
+    <style>
+      #grid{
+        border:5px solid pink;
+      }
+      div{
+        border:5px solid gray;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="grid">
+    <div>NAAVAGATION</div> 
+    <div>ARTICLE</div>
+    </div id="grid">
+  </body>
+```
+
+두 개 이상의 태그를 나란히 배치하고 싶다면 감싸는 부모 태그가 필요하다.
+
+```
+  #grid{
+        border:5px solid pink;
+        display:grid;
+        grid-template-columns: 150px 1fr;
+      }
+```
+첫 번째 element는 150px이라는 고정적인 크기를 가지고 나머지는 남은 공간을 가진다라는 뜻
+
+fr : 화면 전체를 X만큼 화면 전체를 쓰게 자동으로 조정되는 단위
+
+---
+
+### 그리드 응용
+
+```
+<head>
+  <style>
+    #grid{
+      display: grid;
+      grid-template-columns: 150px 1fr;
+    }
+    </style>
+  </head>
+  
+  <body>
+  <div id="grid">
+      <ol>
+        <li><a href="1.html" >HTML</a></li>
+        <li><a href="2.html">CSS</a></li>
+        <li><a href="3.html">JavaScript</a></li>
+      </ol>
+  <div id="article">
+      <h2>CSS</h2>
+   <p>
+    본문
+   </p>
+  </div>
+  </div>
+  </body>
+```
+
+- 그리드를 응용하여 요소(elements)들을 같은 열(columns)에 배치할 수 있다.
+- 열 : columns, 행 : rows
