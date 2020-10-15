@@ -54,14 +54,24 @@
 
 열거형 타입
 1. list (Mutable)
-  * 대괄호[]안에 값을 넣고 ,로 나눠준다.
-    - .append 값을 추가
-    - .reverse 역순
+  * 순서가 있는 수정가능한 객체의 집합.
+  * 수정, 삭제, 추가가 가능.
+  * list 는 [] 대괄호로 작성하고 ,로 구분.
+  * 0으로 시작하는 인덱스로 접근 가능
+  ```
+  a = [1, 2, 3, 4, 5]
+  print (a[0])
+  >>> 1
+  print (a[2])
+  >>> 3
+  ```
+  * .append로 값을 추가할 수 있다.
+  *.reverse로 역순으로 배열할 수 있다.
 1. tuple (Immutable)
   * 소괄호()안에 값을 넣고 ,로 나눠준다.
   
 1. dictonary 
-  * 중괄호 안에{}
+  * 중괄호 안에 `x = {} or x=dict()`로 선언. 선언할 때 값을 넣으려면 `x = {"a" : 1, "b" : "B"}`로. 값을 추가할 때는 `x=["c":True]`로.
   ```
   sam = {
   "name" : "sam",
@@ -69,29 +79,34 @@
     "korean" : True,
     "fav_food" : ["potato chip", "chip"]
 }
+sam=["hobby":"watching movie"]
 ```
 * 모든 변수를 string
 , 쓰는 거 잊지 않기
-= 를 :로 바꾸기
+= 를 : 로 바꾸기
 
 ```
 sam = {
-  "name" : "sam",
     "age" : 21,
-    "korean" : True,
-    "fav_food" : ["potato chip", "chip"]
+    "korean" : True, 
 }
-print (sam["fav_food"
-])
-sam["sleepy"] = True
-print(sam)
+print (sam["korean"])
+```
+특정값만 추출할 수 있음
 
 ```
-
+a = dict()
+b = {}
+print(type(a))
+print(type(b))
+```
 
 [파이썬으로 할 수 있는 걸 찾으려면](https://docs.python.org/3/library/)
 Mutable 바꿀 수 있는
 Immutable 바꿀 수 없는
 
-
+["key"] ["key value"]
+키는 변수와는 관련이 없는 개념인가?
+x=["c":True
+추가할 때 한 번에 여러 개 못하나?
 
