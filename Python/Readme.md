@@ -110,8 +110,11 @@ print(type(b))
 Mutable 바꿀 수 있는  Immutable 바꿀 수 없는
 
 ?["key"] ["key value"]
-키는 변수와는 관련이 없는 개념인가?
-x=["c":True]
+키는 변수와는 관련이 없는 개념인가? 
+
+[해설](https://dojang.io/mod/page/view.php?id=2213) ! 딕서너리에서 키와 키값에는 문자열 뿐만 아니라 정수, 실수, 불리안도 들어갈 수 있다.
+
+?x=["c":True]
 추가할 때 한 번에 여러 개 못하나?
 
 ---
@@ -163,11 +166,11 @@ def plus(a, b=0):
 plus(2, 5)
 ```
 
-* 괄호 안 매개변수(parameter)에 함수를 호출할 때마다 전달인자(argument)에 값을 넣어줄 수 있다, 인자가 존재하는데 값을 넣지 않으면 에러가 발생한다.
+* 함수를 호출할 때마다 전달인자(argument)를 통해 괄호 안 매개변수(parameter)에 값을 넣어줄 수 있다, 매개변수가 존재하는데 값을 넣지 않으면 에러가 발생한다.
 * 파라미터를 여러 개 만들 수도 있다.
 * 파라미터의 기본값을 지정해줄 수 있다.
-* **parameter(매개변수)는 함수를 정의할 떄 나열하는 변수명**
-* **argument(전달인자)는 함수를 호출할 때 전달 또는 입력되는 변수값**
+* **parameter(매개변수)는 함수를 정의할 떄 나열하는 변수명이다.**
+* **argument(전달인자)는 함수를 호출할 때 전달 또는 입력되는 변수값이다.**
 
 ```python
 def p_plus(a, b):
@@ -210,7 +213,7 @@ hello = say_hello("sam", "21")
 print (hello)
 print (type(hello))
 ```
-* 아규먼트에 키워드를 넣어 순서대로가 아닌 원하는 파라미터에 알규먼트 값를 입력할 수 있다. (Keyworded Arguments) 아규먼특 많을 때 실수하는 것을 막아준다.
+* 아규먼트에 키워드를 넣어 순서대로가 아닌 원하는 파라미터에 알규먼트 값를 입력할 수 있다. (Keyworded Arguments) 아규먼트가 많을 때 실수하는 것을 막아준다.
 * 문자열 앞에 f를 넣어주면 {변수}의 값을 출력할 수 있다.
 
 ---
@@ -234,3 +237,28 @@ print (result)
 ```
 * if, else의 끝에는 :를 입력해야 한다.
 * ==는 is로도 쓸 수 있다.
+
+```python
+def age_check(age):
+  print (f"you are {age}")
+  if age < 18:
+    print ("go away!")
+  elif age == 18 or age == 19:
+    print ("umm...")
+  elif age > 20 and age < 25:
+    print ("you are still kind of young.")
+  else:
+    print ("enjoy your drink!")
+
+age_check(19)
+```
+* x or y - 둘 중 하나라도 참이면 참
+* x and y - 둘 중 하나라도 거짓이면 거짓
+* not x - 거짓이면 참, 참이라면 거짓
+* elif(else if) - 모든 if문을 거치고 거짓이면 else로
+
+? if 말고 elif를 쓰는 이유는? if 써도 되긴 되네? 
+
+[해설](https://okky.kr/article/209530) ! if가 여러개 있으면 모든 조건문을 대입해야 하지만 elif는 if에 해당되지 않은 값들만 처리하게 된다.
+
+---
