@@ -106,8 +106,8 @@ print(type(b))
 ```
 
 [파이썬으로 할 수 있는 걸 찾으려면](https://docs.python.org/3/library/)
-Mutable 바꿀 수 있는
-Immutable 바꿀 수 없는
+
+Mutable 바꿀 수 있는  Immutable 바꿀 수 없는
 
 ?["key"] ["key value"]
 키는 변수와는 관련이 없는 개념인가?
@@ -163,9 +163,11 @@ def plus(a, b=0):
 plus(2, 5)
 ```
 
-* 괄호 안 인자(arguments)에 함수를 호출할 때마다 값을 넣어줄 수 있다, 인자가 존재하는데 값을 넣지 않으면 에러가 발생한다.
-* 인자를 여러 개 만들 수도 있다.
-* 인자의 기본값을 지정해줄 수 있다.
+* 괄호 안 매개변수(parameter)에 함수를 호출할 때마다 전달인자(argument)에 값을 넣어줄 수 있다, 인자가 존재하는데 값을 넣지 않으면 에러가 발생한다.
+* 파라미터를 여러 개 만들 수도 있다.
+* 파라미터의 기본값을 지정해줄 수 있다.
+* **parameter(매개변수)는 함수를 정의할 떄 나열하는 변수명**
+* **argument(전달인자)는 함수를 호출할 때 전달 또는 입력되는 변수값**
 
 ```python
 def p_plus(a, b):
@@ -192,3 +194,43 @@ print (result)
 * return을 사용하면 함수를 호출할 때 return된 값으로 치환되어진다.
 * 아무것도 return하지 않으면 변수의 값은 None이 된다.
 * return은 함수를 즉시 종료시킨다. 두 번 return 시킬 수는 없다.
+* **함수의 리턴값을 받는 변수 없이 아규먼트만 입력해도 에러가 나지 않는다.**
+
+```python
+def minus(a, b):
+  return a - b
+ 
+result = minus(b =30, a =1)
+print(result)
+
+def say_hello(name, age):
+  return f"Hello {name} you age {age} years old"
+ 
+hello = say_hello("sam", "21")
+print (hello)
+print (type(hello))
+```
+* 아규먼트에 키워드를 넣어 순서대로가 아닌 원하는 파라미터에 알규먼트 값를 입력할 수 있다. (Keyworded Arguments) 아규먼특 많을 때 실수하는 것을 막아준다.
+* 문자열 앞에 f를 넣어주면 {변수}의 값을 출력할 수 있다.
+
+---
+
+#### 코드 챌린지
+
+---
+
+#### 조건문
+
+```python
+def plus(a, b):
+
+  if type(a) is int or type(a) is float:
+    return a + b
+  else:
+    return None
+
+result = plus(1.22, 10)
+print (result)
+```
+* if, else의 끝에는 :를 입력해야 한다.
+* ==는 is로도 쓸 수 있다.
