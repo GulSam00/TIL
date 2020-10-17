@@ -38,11 +38,11 @@
 
 ---
 
-### 이론
+## 이론
 
 ---
 
-#### 변수
+### 변수
 
 * a = 2 / int(egar)(정수)
 * b = "frog" / string(문자열)
@@ -119,7 +119,7 @@ Mutable 바꿀 수 있는  Immutable 바꿀 수 없는
 
 ---
 
-#### 함수
+### 함수
 
 특정 행동을 반복하기 위해서 사용
 
@@ -145,7 +145,7 @@ n_age = (type(age))
 
 ---
 
-#### 함수
+### 함수
 
 ```python
 def [함수의 이름]():
@@ -218,11 +218,11 @@ print (type(hello))
 
 ---
 
-#### 코드 챌린지
+### 코드 챌린지
 
 ---
 
-#### 조건문
+### 조건문
 
 ```python
 def plus(a, b):
@@ -262,3 +262,68 @@ age_check(19)
 [해설](https://okky.kr/article/209530) ! if가 여러개 있으면 모든 조건문을 대입해야 하지만 elif는 if에 해당되지 않은 값들만 처리하게 된다.
 
 ---
+
+### for문
+
+```python
+days = ("Mon", "Tue", "Wed", "Thu", "Fri")
+
+for today in days:
+  print (today)
+  
+for x in "dfsdfasdf":
+  print(x)
+```
+변수는 item 값을 받는 게 순차적으로 작업할 때마다 값이 바뀜.
+* 작업할 때 값이 들어감.
+* in 다음에는 배열이 들어간다
+* 변수는 어디서 선언되는가? for문이 시작되면 변수가 생기며 배열의 item값을 얻는다.
+* if - break로 for문을 벗어날 수 있다.
+* string, tuple, list 같이 배열의 요소를 순차적으로 가리킨다. (파이썬에서는 string도 배열)
+
+---
+
+### 모듈
+
+```python
+import math
+print (math.ceil(1.32))
+print (math.fabs(-1.2))
+```
+* 기능의 집합, 프로그램에 import해서 사용할 수 있다.
+* 기본으로 제공하는 모듈은 import하기만 하면 설치할 필요 없이 함수를 사용할 수 있다.
+
+```python
+from math import ceil, fsum as fail_sum
+
+print (ceil(1.22))
+print (fail_sum([1, 2, 3, 4, 5]))
+```
+* 기능 전부를 가져오는 것은 비효율적이다.
+* 필요한 기능만 골라 가져올 수 있다.
+* 가져올 때 이름을 변경할 수도 있다.
+* 다른 파일에서 정의된 함수를 import해서 가져올 수 있다.
+
+---
+
+## 실습
+
+web scrapper 기능 구현
+
+### 개요
+
+* 웹상의 데이터를 추출하는 행위, * url로부터 제목과 상단 첫 이미지를 가져와서 미리 보여준다.
+* 비즈니스로도 구현되어 있다.
+* indeed와 stackoverflow에서 구직 정보를 긁어오는 기능 구현
+
+### 네비게이팅
+
+```python
+import requests
+
+indeed_result = requests.get("https://kr.indeed.com/jobs?q=python&limit=50&fromage=last&radius=25&start=850")
+
+print(indeed_result)
+```
+* 메소드 : 오브젝트 안에 있는 function
+* urlib < request < beautiful soup
