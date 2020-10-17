@@ -320,10 +320,24 @@ web scrapper 기능 구현
 
 ```python
 import requests
+from bs4 import BeautifulSoup
 
-indeed_result = requests.get("https://kr.indeed.com/jobs?q=python&limit=50&fromage=last&radius=25&start=850")
+indeed_result = requests.get("https://indeed.com/jobs?q=python&limit=50")
 
-print(indeed_result)
+indeed_soup = BeautifulSoup(indeed_result.text, "html.parser")
+
+pagination = indeed_soup.find("div",{"class":"pagination"})
+
+pages = pagination.find_all('a')
+spans = []
+for page in pages:
+  spans.append(page.find("span"))
+
+spans = spans[:-1])
 ```
 * 메소드 : 오브젝트 안에 있는 function
 * urlib < request < beautiful soup
+* request를 만들고 페이지에 쓸 soup를 만듬. soup는 특정 데이터를 찾고 추출하는 오브젝트.
+* pagination이라는 soup로 div 중 class명이 pagination인 요소를 indeed_soup에 반환했다.
+
+
