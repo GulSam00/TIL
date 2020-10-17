@@ -316,7 +316,7 @@ web scrapper 기능 구현
 * 비즈니스로도 구현되어 있다.
 * indeed와 stackoverflow에서 구직 정보를 긁어오는 기능 구현
 
-### 네비게이팅
+### 웹 스크래핑
 
 ```python
 import requests
@@ -339,5 +339,47 @@ spans = spans[:-1])
 * urlib < request < beautiful soup
 * request를 만들고 페이지에 쓸 soup를 만듬. soup는 특정 데이터를 찾고 추출하는 오브젝트.
 * pagination이라는 soup로 div 중 class명이 pagination인 요소를 indeed_soup에 반환했다.
+
+```python
+#main.py
+from indeed import extract_indeed_pages, extract_indeed_jobs
+
+last_indeed_page = extract_indeed_pages()
+
+indeed_jobs = extract_indeed_jobs(last_indeed_page)
+
+# indeed.py
+import requests
+from bs4 import BeautifulSoup
+
+LIMIT = 50
+URL = "https://indeed.com/jobs?q=python&limit={LIMIT}"
+
+def extract_indeed_pages():
+  result = requests.get(URL)
+
+  soup = BeautifulSoup(result.text, "html.parser")
+
+  pagination = soup.find("div",{"class":"pagination"})
+
+  links = pagination.find_all('a')
+  pages = []
+  for link in links[:-1]:
+    pages.append(int(link.string))
+  
+  print (pages)
+  pages = pages[0:-1]
+  print (pages)
+  max_page = pages[-1]
+
+  return max_page
+
+def extract_indeed_jobs(last_pages):
+  for page in range(last_pages):
+    result = requests.get(f"{URL}&start={page*LIMIT}")
+    print(result.status_code)
+
+```
+
 
 
