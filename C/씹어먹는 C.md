@@ -1128,7 +1128,7 @@ int main() {
 * 포인터 `p`에 어떤 변수 `a`의 주소값이 저장되어 있다면 포인터 `p`는 변수 `a`를 가리킨다고 말한다.
 * 포인터 또한 엄연한 변수 이므로 특정 메모리 공간을 차지한다.
 
-#### 포인터에 타입이 없는 이유
+#### 포인터에 타입이 있는 이유
 
 ```c
 int a;
@@ -1185,7 +1185,9 @@ int main() {
 
 * `const`는 이 데이터의 값이 절대로 바뀌면 안된다라고 일러주는 키워드다.
 * `const int*`은 그 값을 절대로 바꾸면 안 되는 `int`형 변수를 가리킨다는 의미다.
-* `a` 자체는 변수이므로 값이 자유롭게 변경될 수 있다.
+	- `const int a`라는 변수는 값이 절대로 바뀌면 안되는 `int`형 변수 `a`를 가라킨다.
+	- `a` 자체는 변수이므로 값이 자유롭게 변경될 수 있다.
+* `const`가 붙은 `pa`가 가리키는 변수의 값을 절대로 바뀌면 안된다.
 	- `pa`를 통해서 `a`를 간접적으로 가리킬 때는 값을 바꿀 수 없어진다.
 	- 변수 `a` 자체가 `const`는 아니기에 `a = 3;`이라는 문장은 성립힌다.
 
@@ -1206,7 +1208,23 @@ int main() {
 
 * `int* const pa`는 `pa`의 값이 바뀌어선 안되다는 것을 의미한다.
 	- 포인터에는 가리키는 데이터의 주소값이 들어간다.
-	- `pa`에는 처음에 가리킨 `a`말고 다른 변수의 주소값은 절대로 들어갈 수가 없다.
+	- `pa`가 `const`라는 것은 처음에 가리킨 `a`의 주소값 말고 다른 변수의 주소값은 절대로 들어갈 수가 없다는 뜻이다.
+	- `pa`가 가리키는 값을 바꾸면 안되다는 말은 없었기에 `pa`를 통해 변수의 값을 바꾸는 것은 가능하다.
+
+	```c
+/* 전부 불가능 */
+#include <stdio.h>
+int main() {
+  int a;
+  int b;
+  const int* const pa = &a;
+
+  *pa = 3;  // 올바르지 않은 문장
+  pa = &b;  // 올바르지 않은 문장
+
+  return 0;
+}
+```
 
 #### 포인터의 덧셈 뺄셈
 
@@ -1313,7 +1331,7 @@ int main() {
 * `arr` 배열은 `int` 원소 6개를 썼으므로 크기가 24 바이트이다.
 * `parr` 포인터는 포인터의 크기인 8 바이트를 나타난다.
 * 배열의 이름과 첫 번째 원소의 주소값은 엄밀히 다른 것이다.
-* C언어 상에서는 배열의 이름을 사용시 암묵적으로 첫 번째 원소를 가리키는 포인터로 타입 변환이 된다.
+* C언어 상에서는 배열의 이름이 `sizeof`연산자나 주소값 연산자(`&')와 사용될 시 암묵적으로 첫 번째 원소를 가리키는 포인터로 타입 변환이 된다.
 
 ```c
 /* [] 연산자 */
@@ -1356,3 +1374,1260 @@ int *p;
 
 * 포인터 변수를 여러 개 선언하기 용이하기에 `int *p`형식을 보통 더 많이 쓴다.
 	- `int *a, *q, *r;
+
+#### 문제
+* `int arr[3][3];`같은 이차원 배열의 처리 방식
+	- arr[i]는 i번째 행의 시작 주소값을 나타낸다.
+	- `arr[3][3] == *(*(a+3)+3)`
+* `int* arr[3];` : `int*` 변수 3개를 가지는 배열
+
+
+#### 중간 정리
+
+* 배열을 배열이고 포인터는 포인터이다.
+	- sizeof 와 주소값 연산자와 함께 사용할 때를 제외하면, 배열의 이름은 첫 번째 원소를 가리킨다.
+	- arr[i] 와 같은 문장은 사실 컴파일러에 의해 *(arr + i) 로 변환된다.
+		- `printf ("%d", parr[1])` or `printf ("%d", arr[1])` == 
+		`printf ("%d", *(arr + 1)` == 
+		`printf ("%d", *(arr[0] + 1))`
+
+
+#### 1차원 배열
+
+```c
+/* 포인터 이용하기 */
+#include <stdio.h>
+int main() {
+  int arr[10] = {100, 98, 97, 95, 89, 76, 92, 96, 100, 99};
+
+  int* parr = arr;
+  int sum = 0;
+
+  while (parr - arr <= 9) {
+    sum += (*parr);
+    parr++;
+  }
+
+  printf("내 시험 점수 평균 : %d \n", sum / 10);
+  return 0;
+}
+```
+
+* `arr`은 배열의 첫번째 원소를 가리키는 포인터로 자동 변환된다.
+	- `parr = arr;`은 `parr = &arr[0]`와 동일하다.
+	- `*` 없이도 주소값에 해당하는 값인 `arr[0]`에 접근할 수 있게 된다.
+	- `printf ("%d", parr[1])` == `printf ("%d", *(arr + 1)` == `printf ("%d", *(arr[0] + 1))`
+* 배열의 이름이 포인터로 타입 변경이 된다고 한들 
+이는 단순히 출력 시 배열의 첫 번째 원소를 가리키는 주소값 자체가 될 뿐.
+
+#### 포인터의 포인터
+
+```c
+
+/* 포인터의 포인터 */
+#include <stdio.h>
+int main() {
+  int a;
+  int *pa;
+  int **ppa;
+
+  pa = &a;
+  ppa = &pa;
+
+  a = 3;
+
+  printf("a : %d // *pa : %d // **ppa : %d \n", a, *pa, **ppa);
+  printf("&a : %p // pa : %p // *ppa : %p \n", &a, pa, *ppa);
+  printf("&pa : %p // ppa : %p \n", &pa, ppa);
+
+  return 0;
+}
+
+```
+
+* `printf("&pa : %p // ppa : %p \n", &pa, ppa);`
+	- `ppa`는 `int*`를 가리키는 포인터.
+	- `pa`의 주소값이 들가간다.
+	- `ppa == &pa;`
+* `printf("&a : %p // pa : %p // *ppa : %p \n", &a, pa, *ppa);`
+	- `pa`는 `a`를 가리키는 포인터.
+	- `pa`에는 `a`의 주소값이 들어간다.
+	- `&a` == `pa;`
+	- `ppa`는 `pa` 를 가리키는 포인터.
+	- `*ppa` 는 `pa`의 값을 지칭한다.
+	- `pa`의 값인 `*a`를 출력한다.
+* `printf("a : %d // *pa : %d // **ppa : %d \n", a, *pa, **ppa);`
+	- `**ppa` == `*(*ppa)`
+	- `*ppa`는 `a`를 주소값을 가리키는 `pa`의 값(`*pa`)을 가리킨다.
+
+
+
+```c
+#include <stdio.h>
+
+int main() {
+  int arr[3] = {1, 2, 3};
+  int (*parr)[3] = &arr;
+
+  printf("arr[1] : %d \n", arr[1]);
+  printf("parr[1] : %d \n", (*parr)[1]);
+}
+```
+
+* 배열 이름에 `sizeof` 연산자와 주소값 연산자를 사용할 때 빼고는 전부 포인터로 암묵적 변환이 이뤄진다.
+	- 암묵적 변환은 주소값 연산자가 왔을 때에는 이뤄지지 않는다.
+	- `&arr` != `int **`
+* `arr`이 크기가 3인 배열이기 때문에 `&arr`을 보관할 포인터는 크기가 3인 배열을 가리키는 포인터로 정의해야 한다.
+	- `int (*parr)[3] = &arr;`
+	- 만일 `*parr`를 괄호로 감싸지 않으면 컴파일러가 `int*` 원소 3개를 가지는 배열을 정의한 것으로 간주한다.
+
+
+* C 언어는 B 언어에서 파생된 언어
+* B 언어에서는 실제 배열이 있고, 배열을 가리키는 포인터가 따로 있었다. 
+* B 언어에서 arr 과 arr[0], arr[1] 은 각기 다른 메모리를 차지, arr 이 실제로 arr[0] 를 가리키는 포인터. 
+* arr 의 값을 출력하면 실제로 arr[0] 의 주소값이, &arr 은 arr 의 주소값이 나왔다. 
+* 따라서 B 언어에서 arr 과 &arr 은 다른 값을 출력했음.
+* B 언의 문법을 계승한 C언어.
+* 배열을 정의할 때 배열의 시작점을 가리키는 포인터로 공간을 낭비하는 것은 비효율적이라 판단.
+
+
+```c
+/* 정말로? */
+#include <stdio.h>
+int main() {
+  int arr[2][3];
+
+  printf("arr[0] : %p \n", arr[0]);
+  printf("&arr[0][0] : %p \n", &arr[0][0]);
+
+  printf("arr[1] : %p \n", arr[1]);
+  printf("&arr[1][0] : %p \n", &arr[1][0]);
+
+  return 0;
+}
+```
+
+* `arr[0]` 의 값이 `arr[0][0]` 의 주소값과 동일. 
+* `arr[1]` 의 값이 `arr[1][0]` 의 주소값과 동일. 
+* 이차원 배열에서 `sizeof` 나 주소값 연산자와 사용되지 않을 경우, 
+`arr[0]` 은 `arr[0][0]` 을 가리키는 포인터로 암묵적으로 타입 변환
+* `arr[1]` 은 `arr[1][0]` 을 가리키는 포인터로 타입 변환된다라는 뜻.
+	- `int arr[][]` 에서 `arr[0]` 과 `&arr[0][0]`는 같지 않음. 
+	- 다만 암묵적으로 타입 변환 시에 같은 것으로 변할 뿐.
+
+
+### 포인터의 자료형
+
+```c
+/* 과연 될까? */
+#include <stdio.h>
+int main() {
+  int arr[2][3] = {{1, 2, 3}, {4, 5, 6}};
+  int **parr;
+
+  parr = arr;
+
+  printf("arr[1][1] : %d \n", arr[1][1]);
+  printf("parr[1][1] : %d \n", parr[1][1]);
+
+  return 0;
+}
+```
+
+* `int**`로 `arr`의 원소에 접근할 수 없다.
+
+*  이차원 배열을 가리키는 포인터는 반드시 b 값(열의 개수)에 대한 정보를 포함하고 있어야 한다.
+* 포인터 형은 다음과 같은 것에 의해 결정된다.
+	- 가리키는 것에 대한 정보 (예를 들어, int* 이면 int 를 가리킨다, char** 이면 char* 을 가리킨다 등등)
+	- 1 증가시 커지는 크기 (2 차원 배열에서는 b * (형의 크기) 를 의미한다 
+
+
+```c
+/* 1 증가하면 ? */
+#include <stdio.h>
+int main() {
+  int arr[2][3] = {{1, 2, 3}, {4, 5, 6}};
+
+  printf("arr : %p , arr + 1 : %p \n", arr, arr + 1);
+
+  return 0;
+}
+```
+
+```c
+/* (배열의 형) */ (*/* (포인터 이름) */)[/* 2 차원 배열의 열 개수 */];
+// 예를 들어서
+int (*parr)[3];
+```
+
+* 이차원 배열에서 `a`가 1 증가하면 두 번째 행의 시작 주소값을 가리키는 포인터를 가리키게 된다.
+* 2 차원 배열을 가리키는 포인터는 배열의 크기(이차원 배열의 열의 개수)에 관한 정보가 있어야 한다
+* `int (*parr)[3];`는 크기가 3인 배열을 가리키는 포인터를 의미한다.
+
+#### 포인터 배열
+
+```c
+/* 포인터배열*/
+#include <stdio.h>
+int main() {
+  int *arr[3];
+  int a = 1, b = 2, c = 3;
+  arr[0] = &a;
+  arr[1] = &b;
+  arr[2] = &c;
+
+  printf("a : %d, *arr[0] : %d \n", a, *arr[0]);
+  printf("b : %d, *arr[1] : %d \n", b, *arr[1]);
+  printf("b : %d, *arr[2] : %d \n", c, *arr[2]);
+
+  printf("&a : %p, arr[0] : %p \n", &a, arr[0]);
+  return 0;
+}
+```
+
+* 이제까지의 배열 포인터는 배열을 가리키는 포인터. 
+	- 두 용어가 상당히 헷갈림. 언제나 진짜는 뒷부분 이라고 생각하면 됨. 
+* 포인터 배열은 정말로 배열이고, 배열 포인터는 정말로 포인터.
+* `int *arr[3];` == `int* arr[3];`
+* 배열의 형을 `자료형*`로 하는 것도 가능.
+* 배열의 각각의 원소가 int를 가리키는 포인터형으로 선언한 것.
+
+
+
+### 배열 보충
+
+#### 운영체제의 메모리 관리 방식
+
+* C언어에서 사용된 변수들은 컴파일 시 기계어로 변경되어 메모리 주소로 바뀌어버린다.
+	- 기계어에서는 변수 이름보다 메모리의 주소가 훨씬 중요하다.
+	- 컴퓨터 시스테의 메모리는 운영체제가 관리하고 있다.
+	- 운영 체제 (OS, Operating System) : 컴퓨터 시스템을 효과적으로 관리해는 소프트웨어, ex) 윈도우, 리눅스.
+
+* C언어의 int형 개념은 운영체제의 비트 수와 일치, 32비트 운영체제에서는 int형이 32비트.
+* 메모리는 1바이트 단위로 관리됨.
+* 메모리를 사용하려면 메모리의 시작 주소와 한 번에 읽을 크기를 명시해야함.
+
+* 직접 주소 지정 방식
+	- C언어에서 변수에 값을 대입하면 어셈블리어 형태의 기계어로 번역된다.
+	- 변수라는 개념으로 C언어는 직접 주소 지정 방식을 사용한다.
+	- C언어에서 직접 주조 지정 방식은 서로 다른 함수에 존재하는 변수를 참조할 수 없다.
+	- 함수를 호출하며 아규먼트를 보내야만 해당 함수에서 파라미터로 사용이 가능하다.
+		- 아규먼트로 보낸 원본 변수의 값에 접근은 불가능하다.
+
+* 간접 주소 지정 방식
+	- 어떤 매개체를 이용해 주소를 간접적으로 명시한다.
+	- 매개체는 4 바이트 크기의 메모리를 필요로 한다.
+		- 32비트 운영체제가 주소를 32비트(4 바이트)로 저장하기 때문.
+	- 값을 저장할 주소를 메모리에 저장.
+
+
+#### 포인터
+
+* 기존의 변수로는 다른 변수의 주소값을 읽거나 저장이 불가능, 이를 위한 문법이 포인터.
+* 포인터 변수는 변수명 앞에 `*`를 붙이며 선언한다.
+* 자료형이 무엇이든 포인터 변수의 크기는 4 바이트다. 자료형은 주소의 시작점에서 얼마나 읽어야 하는 지는 의미한다.
+
+* 프로그램이 실행도리 때마다 사용할 메모리 공간의 주소는 매번 달라짐.
+* 주소를 직접 입력하는 것보다 다른 변수의 주소값을 받는 것이 안전.
+* 변수의 주소값은 변수 앞에 `&`를 사용하여 구할 수 있다.
+* `*`는 두 가지 용도로 사용된다.
+	- 포인터 변수 선언시.
+	- `포인터 변수에 저장된 주소값이 가리키는 값`에 무언가를 대입할 시.
+
+* 포인터 문법은 두 개의 메모리과 관련이 있다.
+	- 포인터 변수가 저장된 메모리.
+	- 포인터가 가리키는 대상 메모리.
+* 포인터 변수도 변수처럼 자신이 저장된 메모리 공간을 가지고 있다.
+	- 주소를 저장하기에 메모리 크기가 4 바이트로 고정된다.
+	- 포인터 변수에 저장된 주소는 `포인터가 가리키는 주소값`의 시작점을 의미한다.
+		- 실제 프로그램이 어떤 영역에 할당될지 모르기에 고정주소를 직접 표기해서 접근하는 것은 어렵다.
+* 포인터에는 주소값이 저장되었기에 같은 함수가 아니더라도 주소값에 해당하는 값에 접근이 가능하다.
+
+#### 포인터와 const 키워드
+
+* 포인터 변수는 두 가지 형태로 `const` 키워드를 사용할 수 있다.
+	- `const int *p` : 대상(주소값)을 상수화, 주소값에 해당하는 값 변경 불가능
+	- `int *const p` : 자신을 상수화, 다른 주소값으로 변경 불가능
+	- `const int * const p` : 대상과 자신 모두 상수화,  주소값에 해당하는 값 변경 불가능 및 다른 주소값으로 변경 불가능
+
+
+#### 포인터 변수의 주소 연산
+
+* 포인터는 시작주소와 사용할 크기로 메모리 범위를 기억.
+* 사용할 크기는 선언할 때의 자료형의 크기와 동일.
+* 포인터 변수 연산 시 기본 단위는 포인터 변수가 가리킬 주소(자료형)의 크기가 된다.
+	- 자료형이 int형 일시 1 더할 때마다 4 (바이트) 씩 증가. 
+
+#### 포인터와 대상의 크기
+
+* `int *p`라고 선언 시 포인터 변수의 크기가 아닌 가리킬 대상의 크기를 의미하는 것. (포인터 변수의 크기는 항상 4 바이트로 고정.)
+* 포인터 변수와 그 대상이 될 변수의 자료형을 같게 지정하는 것이 일반적.
+* 의도적으로 다르게 사용하는 경우도 존재.
+
+#### void *형 포인터
+
+* `void *p;`
+* 포인터 변수가 가리키는 대상의 크기가 정해지지 않음을 의미한다.
+* 메모리의 시작 주소만 알고 끝 주소(얼마나 읽어야 할지) 모를 때 사용하는 포인터 형식이다.
+* `void *p;`는 주소를 사용할 때 반드시 사용할 크기(형 변환)을 표기해야 한다.
+
+```c
+int data = 0;
+void *p = &data;
+*(int *)p = 5;
+```
+
+#### 배열 시작 주소
+
+* 배열 변수의 이름은 배열의 시작 주소이다.
+* `char *p = &data[0]` == `char *p = & *(data + 0)` == `char *p = & * data` == `char *p = data` //???
+	- `+0`은 생략 가능, `&`과 `*`는 서로 상쇄.
+* 배열은 포인터처럼 다른 변수의 주소를 저장할 수 없다.
+* 변수의 집합인 배열은 상수화된 주소이기에 자신이 위치한 메모리 주소, 시작 주소를 변경할 수 없다.
+
+#### 배열과 포인터의 합체
+
+* 포인터 변수도 배열로 선언해서 사용할 수가 있다.
+* `char *p[2]` == `char *p1, *p2, *p3`
+* 포인터 배열의 크기는 배열 개수 * 4 바이트
+* 배열 기준으로 포인터와 합체 (포인터 배열)
+	- `char *p[5]`시 [] 연산자가 더 우선이기에 p 변수는 5개의 항목을 가진 배열이 되고, 그 후에야 각 항목이 char *형 포인터라고 정해진다.\
+	- 포인터 항목을 가진 배열인 p변수의 크기는 20 바이트이다.
+* 포인터 기준으로 배열과 합체 (배열 포인터)
+	-`char (*p)[5];`시 *가 더 우선이기에 p 변수는 포인터가 되고, 포인터 변수가 가리키는 주소값의 크기가 5 바이트라는 뜻이 된다.
+	- p 변수의 크기는 4 바이트이다.
+	- 가리키는 대상이 배열 형식(`char[5]`)이기에 []로 정확한 대상을 선택해야 한다.
+	- 주소 연산 시 주소값의 크기가 5바이트이기에 5씩 증감한다.
+
+#### 다차원 포인터
+
+* 가리키는 대상의 개수만큼 차원이 증가.
+	- 나의 친구에서 나는 친구를 가리키니 1차원, 친구는 대상 자체이니 0차원.
+	- 나의 친구의 친구에서 나는 2차원, 나의 친구는 1차원
+	- * 키워드가 하나씩 늘때마다 차원이 증가.
+
+#### 2차원 포인터
+
+* `*` 두개를 사용해서 선언.
+* `**p` == `*(*p)`
+	- `*p`가 가리키는 주소값에 해당하는 포인터의 값 == 해당 포인터가 가리키는 또다른 주소값
+* 2차원 포인터가 가리키는 상자(주소값)의 값이 주소값이 아니라면 오류 발생.
+	- 2차원 포인터는 1차원 포인터의 주소 값이 저장되어야 한다.
+
+### 포인터 강의
+
+```c
+// `arr == &arr[0]`
+// `*arr == arr[0]` `*(arr+2) == arr[2]`
+// ptr + 1 == ptr + sizeof(*ptr)
+
+int arr[2][3] = { {1,2,3}, {4,5,6} };
+
+int(*ptr)[3] = &arr[0]; // 원소를 3개 가지는 1차원 배열을 가리키는 포인터
+						// arr의 첫번째 행 전체를 가리키는 포인터
+for (int i = 0; i < 2; i++)
+{
+	for (int j = 0; j < 3; j++)
+	{
+		printf("%d", ptr[i][j]);
+	}
+	printf("\n");
+}
+
+return 0;
+
+```
+* `arr[0]` 자체를 하나의 1차원 배열로 볼 수 있음.
+* `arr[0]`은 원소(항목)들인 `arr[0][0], arr[0][1], arr[0][2]`을 의미한다.
+* `(*ptr)[3]`는 원소를 3개 가지는 1차원 배열을 가리키는 포인터이다.
+* `int(*ptr)[3] = &arr[0]`는 ptr이 3개의 원소를 가진 arr[0]이라는 배열 전체를 가리킨다고 볼 수 있다.
+	-  *(ptr + i)에서 i가 하나 오를 때마다 주소값은 (포인터의 자료형 * 포인터가 가리키는 배열의 개수)만큼 증가한다.
+	- i가 늘 때마다 arr의 다음 행을 가리킨다고 해도 무방.
+* 2차원 배열의 한 행만큼을 가리키는 배열 포인터를 만들면 해당 배열을 치환하는 게 가능
+
+* ptr[i] == arr[i]
+* ptr[i][j] == arr[i][j]
+* ptr == arr
+
+
+```c
+int arr[2][3] = { {1,2,3}, {4,5,6}};
+for (int(*row)[3] = arr; row < arr + 2; row++)
+{
+	for (int* col = *row; col < *row + 3; col++)
+	{
+		printf("%d \n", *col);
+		printf("%p \n", col);
+		printf("%d \n", *row[0]);
+		printf("%p \n", row[0]);
+	}
+	printf("\n");
+}
+```
+
+* row는 세개짜리 int형 원소를 가진 배열을 가리키는 포인터, arr를 가리킨다.
+* row에 1을 더하면 4 바이트 * 3인 12만큼 주소값이 증가한다.
+* col은 row를 가리키는 포인터이다.
+	- row는 row[0][0]로 표현할 수 있다.
+	- row([0][0])는 arr[0][0]의 주소값과 동일한 주소값을 저장한다. 
+	- col == *row == &(*row)[0]
+	
+
+
+
+### 함수
+
+* 반환값이 없으면 선언 시 void, 있다면 해당 자료형으로 선언.
+
+```c
+// 토이 프로젝트
+
+
+#include <stdio.h>
+int add(int num1, int num2);
+int sub(int num1, int num2);
+int mul(int num1, int num2);
+int div(int num1, int num2);
+int input_num(int num);
+
+int main_function() {
+	int num1 = 0;
+	int num2 = 0;
+	int select = 0;
+	printf("ㄴㅇㄹ");
+	while (select < 5) {
+		select = 0;
+		num1 = input_num(num1);
+		num2 = input_num(num2);
+		printf("1. 더하기 \n 2. 빼기 \n 3. 곱하기 \n 4. 나누기 \n 5. 나가기\n 입력 :");
+		scanf_s("%d", &select);
+		switch (select)
+		{
+		case 1: 
+		{
+			printf("값 : %d", add(num1, num2)); 
+			continue;
+		}
+		case 2: 
+		{
+			printf("값 : %d", sub(num1, num2)); 
+			continue;
+		}
+			
+		case 3: 
+		{
+			printf("값 : %d", mul(num1, num2)); 
+			continue;
+		}
+			
+		case 4: 
+		{
+			printf("값 : %d", div(num1, num2)); 
+			continue;
+		}
+			
+		default: 
+		{
+			printf("안녕히");
+		}
+		}
+
+	}
+	return 0;
+
+}
+
+int add(int num1, int num2)
+{
+	return num1 + num2;
+}
+int sub(int num1, int num2)
+{
+	return num1 - num2;
+}
+int mul(int num1, int num2)
+{
+	return num1 * num2;
+}
+int div(int num1, int num2)
+{
+	return num1 / num2;
+}
+int input_num(int num)
+{
+	printf("숫자를 입력하세요. \n");
+	scanf_s("%d", &num);
+	printf("\n 입력한 숫자 = %d \n", num);
+	return num;
+}
+
+```
+### 배열
+
+* sizeof로 배열의 크기를 계산하면 문자열보다 1만큼 크게 나옴.
+* 문자열의 마지막에는 끝을 의미하는 NULL 문자인 `\0`이 포함되어야 함.
+	- 마지막 공간에 자동으로 입력됨.
+	- 문자열에 딱 맞게 배열을 설정하면 오류 발생.
+* 영어는 글자당 1 바이트, 한글은 글자당 2 바이트.
+* char 자료형의 크기는 1 바이트.
+
+* char를 %d로 출력하면 아스키 코드가 출력됨.
+	- 0과 1밖에 모르는 컴퓨터가 문자를 출력할 수 있는 이유.
+
+* null은 아스키 코드로 0
+
+```c
+// 프로젝트
+
+#include <stdio.h>
+#include <time.h>
+
+int main_array()
+{
+	srand(time(NULL));
+	printf(" \n\n ======= 대머리 ====== \n\n");
+	int answer;
+	int treatment = rand() % 4; // 0 ~ 3 중 랜덤
+
+	int cur_show = 0;
+	int pre_show = 0;
+
+	for (int i = 1; i <= 3; i++) {
+		int bottle[4] = { 0, 0, 0, 0 };
+			do {
+				cur_show = (rand() % 2) + 2; // 2 or 3
+			} while (cur_show == pre_show);
+
+			pre_show = cur_show;
+			int is_included = 0;
+			printf(" > %d 번째 시도 : ", i);
+
+			for (int j = 0; j < cur_show; j++)
+			{
+				int rand_bottle = rand() % 4; // 0 ~ 3
+
+				if (bottle[rand_bottle] == 0) {
+					bottle[rand_bottle] = 1;
+					if (rand_bottle == treatment) is_included = 1;
+				}
+				else j--;
+			}
+
+			for (int k = 0; k < 4; k++)
+			{
+				if (bottle[k] == 1)	printf("%d ", k + 1);
+
+			}
+			printf(" 물약을 머리에 바릅니다. \n\n");
+				if (is_included == 1) printf("자라나라 머리머리! \n");
+				else printf("실패!  \n");
+				printf("아무 키나 누르세요...");
+				getchar();
+
+			}
+
+
+	printf("발모제는 몇 번?");
+	scanf("%d", &answer);
+	if (answer == treatment + 1) printf("정답!");
+	else printf("오답! 답은 %d였습니다.", treatment + 1);
+
+
+
+	return 0;
+
+```
+
+
+### 배열
+
+```c
+#include <stdio.h>
+int main()
+{
+	int arr[3] = {10, 20, 30};
+	int* ptr = &arr;
+	for (int i = 0; i < 3; i++)
+	{
+		printf("배열 arr[%d]의 값 : %d \n", i, arr[i]);
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		printf("포인터 ptr[%d]의 값 : %d \n", i, ptr[i]);
+	}
+
+	ptr[0] = 100;
+	ptr[1] = 200;
+
+	for (int i = 0; i < 3; i++)
+	{
+		//printf("배열 arr[%d]의 값 : %d \n", i, arr[i]);
+		printf("배열 arr[%d]의 값 : %d \n", i, *(arr + i));
+
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		//printf("포인터 ptr[%d]의 값 : %d \n", i, ptr[i]);
+		printf("포인터 ptr[%d]의 값 : %d \n", i, *(ptr + i));
+		printf("포인터 ptr[%d]의 주소값 : %p \n", i, ptr + i);
+
+	}
+	// *(arr + i) == arr[i]
+	// 배열의 주소 == 배열의 0번째(첫번째) 주소
+
+	printf("arr 자체의 값 : %p\n", arr);
+	printf("arr[0]의 주소 : %p\n", &arr[0]);
+
+	printf("arr 자체의 값이 가지는 주소의 실제 값 : %d \n", *arr); // *(arr + 0)
+	printf("arr[0]의 실제 값 : %d \n", arr[0]);
+
+
+	// *&는 아무것도 것는 것과 같다. &는 주소, *은 주소의 값
+	// *& 붙어있으면 서로 상쇄.
+
+	return 0;
+}
+```
+
+* 배열의 주소값을 포인터에 대입하니 `*`없이 포인터 변수 만으로도 인덱싱으로 원소의 값에 접근이 가능.
+* 포인터로 대응하는 주소의 배열의 원소값에 `*` 없이 접근 및 수정이 가능.
+* 포인터가 배열에 대응?
+* 배열(arr)의 주소값과 값은 `배열[0]`의 주소값과 값과 똑같다.
+
+#### SWAP
+```c
+#include <stdio.h>
+void swap(int a, int b);
+void swap_addr(int *a, int *b);
+int main() {
+	int a = 10;
+	int b = 20;
+	printf("a의 주소 : %p \n", &a);
+	printf("b의 주소 : %p \n", &b);
+	printf("SWAP 함수 전 -> a : %d, b : %d \n", a, b);
+	swap(a, b);
+	printf("SWAP 함수 후 -> a : %d, b : %d \n", a, b);
+
+	printf("\n\n");
+	// 값에 의한 복사 (Call by Value) -> 변수가 아닌 값만 복사, 지역함수 개념?
+
+	// 메모리 공간의 주소값 자체를 넘기면?
+	printf("a의 주소 : %p \n", &a);
+	printf("b의 주소 : %p \n", &b);
+	printf("SWAP_ADDR 함수 전 -> a : %d, b : %d \n", a, b);
+	swap_addr(&a, &b);
+	printf("SWAP_ADDR 함수 후 -> a : %d, b : %d \n", a, b);
+	return 0;
+}
+
+void swap(int a, int b)
+{
+	printf("a의 주소 : %p \n", &a);
+	printf("b의 주소 : %p \n", &b);
+	int temp = a;
+	a = b;
+	b = temp;
+	printf("SWAP 함수 내부 -> a : %d, b : %d \n", a, b);
+}
+
+void swap_addr(int *a, int *b)
+{
+	printf("a의 주소 : %p \n", &a);
+	printf("b의 주소 : %p \n", &b);
+	int temp = *a;
+	*a = *b;
+	*b = temp;
+	printf("SWAP_ADDR 함수 내부 -> a : %d, b : %d \n", *a, *b);
+}
+```
+
+* 함수에서 파라미터를 변경해도 아규먼트로 보낸 원래 변수의 값은 변하지 않는다.
+* 파라미터를 포인터 변수로 지정하고 아규먼트 변수 앞에 &를 붙일 수 있다.
+	- 함수 내부에서 값을 수정하면 원래 변수의 주소값에 해당하는 값을 변경하는 것이기에 함수 밖 변수도 영향을 받는다.
+
+```c
+# include <stdio.h>
+
+void change_array(int* ptr);
+
+int main() {
+	int arr[3] = { 10, 20, 30 };
+	//change_array(arr);
+	change_array(&arr[0]);
+	
+	for (int i = 0; i < 3; i++) {
+		printf("%d \n", arr[i]);
+	}
+}
+
+void change_array(int* ptr)
+{
+	ptr[2] = 50;
+}
+```
+
+* 배열은 변수 자체가 주소값(배열[0])을 가지기 때문에 *를 붙이지 않아도 연동이 된다.
+* `change_array(arr) == change_array(&arr[0])`
+
+```c
+
+// 프로젝트
+
+#include <stdio.h>
+#include <time.h>
+
+
+int level;
+int arrayFish[6];
+int* cursor;
+void initData();
+void printfFishes();
+void decreaseWater(long preTime);
+int checkFishAlive();
+
+int main() {
+
+	long startTime = 0; // 시작 시간
+	long totalTime = 0; // 총 시간
+	long preTime = 0; // 직전 경과 시간
+
+	int num; // 몇 번 어항에 물을 줄건지 입력
+	initData();
+
+
+	cursor = arrayFish; // cursor[0] = arrayFish[0]
+
+	startTime = clock(); // 현재 시간을 1000분의 1초 수준으로 반환
+
+	printf("%d %d %d %d \n", cursor[0], cursor[1], cursor[2], cursor[3]);
+
+	while (1)
+	{
+		printfFishes();
+		printf(" 몇 번 어항에 물을 줄래?");
+		scanf_s("%d", &num);
+
+
+		// 입력값 체크
+		if (num < 1 || num > 6)
+		{
+			printf("잘못 입력");
+			continue;
+		}
+
+		// 총 경과 시간
+		totalTime = (clock() - startTime) / CLOCKS_PER_SEC;
+		printf("총 경과 시간 : %ld 초 \n", totalTime);
+
+		// 직전 물 준 시간
+		preTime = totalTime - preTime;
+		printf("최근 경과 시간 : %ld 초 \n", preTime);
+
+		// 어항의 물을 감소
+		decreaseWater(preTime);
+
+		// 입력한 어항에 물을 준다
+			// 어항의 물이 없으면 줄 수 없다.
+		if (cursor[num - 1] <= 0)
+		{
+			printf("%d번 어항은 이미 말라버렸다...\n",num);
+		}
+			// 물이 100 이하이다.
+		else if (cursor[num - 1] + 5 >= 100)
+		{
+			printf("%d번 어항에 물이 넘칠 것 같다...\n", num);
+		}
+		else
+		{
+			printf("%d번 어항에 물을 준다. \n", num);
+			cursor[num - 1] += 5;
+		}
+
+
+		// 레벨 업 여부
+		if ((int)totalTime / 20 > level - 1)
+		{
+			level += 1;
+			printf("레벨 업! \n");
+
+			if (level == 6)
+			{
+				printf("게임 클리어! \n");
+				exit(0);
+			}
+		}
+
+		// 모든 물고기가 죽었는지 확인
+		if (checkFishAlive() == 0)
+		{
+			printf("게임오버... \n");
+			exit(0);
+		}
+		else {
+			printf("화이팅!\n");
+
+		}
+
+		preTime = totalTime;
+
+	}
+
+
+	return 0;
+}
+
+void initData()
+{
+	level = 1; // 게임 레벨
+	for (int i = 0; i < 6; i++)
+	{
+		arrayFish[i] = 100; // 물 높이
+		//printf("물높이 : %d \n", arrayFish[i]);
+	}
+}
+
+void printfFishes()
+{
+	for (int i = 0; i < 6; i++)
+	{
+		printf("%3d번 ", i + 1);
+	}
+	printf("\n");
+
+	for (int i = 0; i < 6; i++)
+	{
+		printf(" %4d ", arrayFish[i]);
+	}
+	printf("\n\n");
+
+}
+
+void decreaseWater(long preTime)
+{
+	for (int i = 0; i < 6; i++)
+	{
+		arrayFish[i] -= (level * 3 * (int)preTime); // 줄어든 물의 양 처리
+		if (arrayFish[i] < 0)
+		{
+			arrayFish[i] = 0;
+		}
+	}
+}
+
+int checkFishAlive()
+{
+	for (int i = 0; i < 6; i++)
+	{
+		if (arrayFish[i] > 0)
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+```
+
+### 다차원 배열
+
+```c
+int arr5[4][2];
+	/* 
+	 1 2
+	1ㅁㅁ
+	2ㅁㅁ
+	3ㅁㅁ
+	4ㅁㅁ
+
+	[0,0][0,1]
+	[1,0][1,1]
+	[2,0][2,1]
+	[3,0][3,1]
+	
+	*/
+
+	int arr3[2][3][4];
+	/*
+	ㅁㅁㅁ ㅁㅁㅁ ㅁㅁㅁ ㅁㅁㅁ
+	ㅁㅁㅁ ㅁㅁㅁ ㅁㅁㅁ ㅁㅁㅁ
+
+	*/
+
+	int arr_1[3][6] = { 
+		{1,2,3,4,5},
+		{3,4},
+		{1} 
+	};
+
+	int arr_2[2][2][2] = {
+		{
+			{1, 2},
+			{3, 4}
+		},
+		{
+			{5, 6},
+			{7}
+
+		}
+	};
+```
+
+* `getchar()` 사용자가 입력할 때까지 기다리는 함수.
+
+```c
+// 프로젝트
+
+#include <stdio.h>
+#include <time.h>
+
+int arrayAnimal[4][5];
+int ckeckAnimal[4][5];
+char* strAnimal[10];
+
+void initAnimalArray();
+void initAnimalName();
+void shuffleAnimal();
+int getEmptyPostion();
+int conv_pos_x(pos);
+int conv_pos_y(pos);
+void printAnimals();
+void printQuestion();
+int foundAllAnimals();
+int main()
+{
+	srand(time(NULL));
+
+	initAnimalArray();
+	initAnimalName();
+	shuffleAnimal();
+
+	int failCount = 0;
+
+	while (1) {
+		int select1 = 0;
+		int select2 = 0;
+
+		printAnimals();
+		printQuestion();
+		printf("뒤집을 카드 2개 선택 : ");
+		scanf_s("%d %d", &select1, &select2);
+
+		if (select1 == select2) continue;
+
+		int firstSelect_x = conv_pos_x(select1);
+		int firstSelect_y = conv_pos_y(select1);
+
+		int secondSelect_x = conv_pos_x(select2);
+		int secondSelect_y = conv_pos_y(select2);
+
+		if (ckeckAnimal[firstSelect_x][firstSelect_y] + ckeckAnimal[secondSelect_x][secondSelect_y] == 0
+			&&
+			arrayAnimal[firstSelect_x][firstSelect_y] == arrayAnimal[secondSelect_x][secondSelect_y])
+		{
+			printf("\n\n 빙고! : %s 발견 \n", strAnimal[arrayAnimal[firstSelect_x][firstSelect_y]]);
+			ckeckAnimal[firstSelect_x][firstSelect_y] = 1;
+			ckeckAnimal[secondSelect_x][secondSelect_y] = 1;
+		}
+		else if (ckeckAnimal[firstSelect_x][firstSelect_y] + ckeckAnimal[secondSelect_x][secondSelect_y] != 0)
+		{
+			printf("이미 뒤집힌 카드입니다. \n");
+			failCount++;
+		}
+
+		else
+		{
+			printf("땡! \n");
+			failCount++;
+		}
+		printf("%d : %s \n", select1, strAnimal[arrayAnimal[firstSelect_x][firstSelect_y]]);
+		printf("%d : %s \n", select2, strAnimal[arrayAnimal[secondSelect_x][secondSelect_y]]);
+
+	}
+
+	if (foundAllAnimals())
+	{
+		printf("게임 클리어!");
+		printf("총 %d 번 틀렸습니다.", failCount);
+		exit(0);
+	}
+
+	return 0;
+}
+
+
+void initAnimalArray()
+{
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 5; j++) {
+			arrayAnimal[i][j] = -1;
+		}
+	}
+}
+
+void initAnimalName()
+{
+	strAnimal[0] = "원숭이";
+	strAnimal[1] = "하마";
+	strAnimal[2] = "강아지";
+	strAnimal[3] = "고양지";
+	strAnimal[4] = "돼지";
+	strAnimal[5] = "코끼리";
+	strAnimal[6] = "기린";
+	strAnimal[7] = "낙타";
+	strAnimal[8] = "타조";
+	strAnimal[9] = "호랑이";
+
+}
+
+void shuffleAnimal()
+{
+	// ㅁㅁㅁㅁㅁ
+	// ㅁㅁㅁㅁㅁ
+	// ㅁㅁㅁㅁㅁ
+	// ㅁㅁㅁㅁㅁ
+	// ㅁㅁㅁㅁㅁ
+	for (int i = 0; i < 10; i++) // 동물 짝 설정
+	{
+		for (int j = 0; j < 2; j++)
+		{
+			int pos = getEmptyPostion();
+			int x = conv_pos_x(pos);
+			int y = conv_pos_y(pos);
+
+			arrayAnimal[x][y] = i;
+		}
+	}
+}
+
+// 빈 공간 찾기
+int getEmptyPostion()
+{
+	while (1)
+	{
+		int randPos = rand() % 20; // 0 ~ 19 사이의 숫자를 반환
+		int x = conv_pos_x(randPos);
+		int y = conv_pos_y(randPos);
+
+		if (arrayAnimal[x][y] == -1)
+		{
+			return randPos;
+		}
+	}
+	return 0;
+}
+
+int conv_pos_x(pos)
+{
+	int x = pos / 5;
+	return x;
+}
+
+int conv_pos_y(pos)
+{
+	int y = pos % 5;
+	return y;
+}
+
+
+void printAnimals()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			printf("%8s", strAnimal[arrayAnimal[i][j]]);
+		}
+		printf("\n");
+	}
+	printf(" \n ===============정답================\n");
+}
+
+
+void printQuestion()
+{
+	printf("\n\n 문제 \n\n");
+	int seq = 0;
+
+	/*								//seq				/checkAnimal
+		ㅁㅁㅁㅁㅁ				0 1 2 3 4				0 0 0 0 0
+		ㅁㅁㅁㅁㅁ				돼지 6 7 8 9 돼지			1 0 0 0 1
+		ㅁㅁㅁㅁㅁ
+		ㅁㅁㅁㅁㅁ
+		ㅁㅁㅁㅁㅁ
+
+	*/
+
+
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			// 카드를 뒤집어서 정답을 맞추면 "동물 이름"
+			if (ckeckAnimal[i][j] != 0)
+			{
+				printf("%8s", strAnimal[arrayAnimal[i][j]]);
+			}
+
+			// 아직 못 맞혔다면 숫자
+			else
+			{
+				printf("%8d", seq);
+			}
+			seq++;
+
+		}
+		printf("\n");
+	}
+}
+
+int foundAllAnimals()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			if (ckeckAnimal[i][j] == 0)
+			{
+				return 0;
+			}
+		}
+	}
+	return 1;
+}
+
+```
+
+* int형 배열은 초기 선언 시 자동으로 모든 값을 0으로 초기화한다.
+
+### 구조체
+
+```c
+
+#include <stdio.h>
+
+struct GameInfo
+{
+	char* name;
+	int year;
+	int price;
+	char* company;
+};
+
+int main()
+{
+struct GameInfo gameInfo1;
+	
+	gameInfo1.name = "나도게임";
+	gameInfo1.year = 2017;
+	gameInfo1.price = 50;
+	gameInfo1.company = "나도회사";
+
+	struct GameInfo gameInfo2 = { "게임게임", 2020, 100, "나거히소" };
+
+	return 0;
+}
+```
+
+* struct를 사용해서 구조체 선언
+* 파이썬 클래스와 비슷
+* 구조체를 자료형(?)을 선언하고 중괄호 안에 값들을 넣으면 차례대로 초기화된다. 
+
+```c
+	struct GameInfo gameArray[2] = { 
+	{ "게임게임", 2020, 100, "나거히소" },
+	{ "게게게임임", 2018, 190, "메피비즘" }
+	};
+```
+
+* 배열로도 구조체를 만들 수 있음.
+
+```c
+	struct GameInfo *gamePtr;
+	gamePtr = &gameInfo1;
+	printf("포인터 \n");
+	printf("  게임명 : %s\n", (*gamePtr).name);
+	printf("  게임명 : %d\n", (*gamePtr).year);
+	printf("  게임명 : %d\n", (*gamePtr).price);
+	printf("  게임명 : %s\n", (*gamePtr).company);
+
+	printf("  게임명 : %s\n", gamePtr->name);
+	printf("  게임명 : %d\n", gamePtr->year);
+	printf("  게임명 : %d\n", gamePtr->price);
+	printf("  게임명 : %s\n", gamePtr->company);
+
+
+
+```
+
+* 포인터로 구조체를 만들 수 있음.
+* 주소값에 해당하는 자료(값)에 접근하기 위해서 `*`를 사용
+	- 기존처럼 `*포인터변수.구조체변수`라고 쓰면 포인터변수.구조체변수의 주소값을 찾으려고 함.
+	- `*`와 포인터변수를 괄호로 묶어놓아야만 정상 작용.
+* `포인터변수 -> 구조체변수`같은 편리한 방식으로 접근 가능
+
+```c
+#include <stdio.h>
+
+typedef struct //GameInfomation 
+{
+	char* name;
+	int year;
+	int price;
+	char* company;
+	struct GameInfo* friendGame;
+} GAME_INFO;
+
+
+int main()
+{
+
+	// 구조체의 구조체
+	gameInfo1.friendGame = &gameInfo2;
+	printf("구조체 안의 구조체\n");
+
+	printf("  게임명 : %s\n", gameInfo1.friendGame->name);
+	printf("  게임명 : %d\n", gameInfo1.friendGame->year);
+	printf("  게임명 : %d\n", gameInfo1.friendGame->price);
+	printf("  게임명 : %s\n", gameInfo1.friendGame->company);
+
+	// typedef
+	// 자료형에 이름 지정
+	int i = 1;
+	typedef int 정수;
+	정수 j = 3;
+	printf("%d, %d \n", i, j);
+
+	typedef struct GameInfo 게임정보;
+	게임정보 game1;
+	game1.name = "한글게임1";
+	game1.year = 4124;
+	printf ("%d %d \n", game1.name, game1.year);
+
+	
+	GAME_INFO game2;
+	game2.name = "한글 겡미2";
+	game2.year = 3213;
+	printf("%s %d \n", game2.name, game2.year);
+
+
+	return 0;
+
+
+}
+```
+
+* `typedef`
+	- 자료형에 이름을 지정할 수 있게 된다.
+	- `typedef` `바꾸고 싶은 자료형` `바꾸고 싶은 이름`
+	- `struct 구조체 이름`같은 두 개 이상의 문장도 치환시키는 게 가능하다. 
+	- 구조체를 선언할 때 앞에 `typedef`를 붙이고 중괄호 마지막에 치환할 이름을 적을 수 있다.
+		- `typedef struct`처럼 구조체의 이름을 지워도 선언에는 문제 없지만 구조체 이름을 적은 코드는 에러가 난다.
+
+---
+
+### 파일 입출력
+
+* fputs, fgets
+*  fprintf, fscanf 
