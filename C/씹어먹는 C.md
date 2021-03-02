@@ -563,6 +563,14 @@ for (/* 초기식 */; /* 조건식 */; /* 증감식 */) {
 * 증감식 : 실행 할 때 마다 변할 i의 값을 지정한다.
 * for문의 조건문이 명시되지 않으면 항상 참이라고 인식한다. EX) `for (;;)`
 
+#### 증감연산자
+
+* 증감연산자를 쓸 때 후위연산자는 관례처럼 쓰인다.
+- 	연산자만 단독으로 활용하면 앞뒤 상관이 없다.
+- 	변수나 인자로 할당할 때 전위 연산자의 경우 연산을 실행한 후, 후위 연산자의 경우 변수에 값을 할당하고 연산을 진행하는 차이가 있다.
+	- `a = 2; b = a++; c = ++a; `
+	- `b`의 값은 2, `c`의 값은 3이다.
+
 * `break` : 해당 반복문을 무조건 탈출시킨다.
 * `continue` : 해당 반복문의 조건부로 건너뛴다. 증감식은 그대로 적용된다.
 * 한줄 if문은 중괄호가 필요없다.
@@ -1775,9 +1783,424 @@ for (int(*row)[3] = arr; row < arr + 2; row++)
 
 
 
-### 함수
+### 13. 함수
 
+* 함수를 선언하고 함수 호출 시 실행할 코드를 입력할 수 있다.
+* `()`는 함수임을 의미한다.
+* 함수의 이름은 한 눈에 알아 볼 수 있을 만큼 구체적으로 하면 좋다.
 * 반환값이 없으면 선언 시 void, 있다면 해당 자료형으로 선언.
+* `[함수 이름]();` 형식으로 호출한다. 함수가 파라미터를 받는다면 `()`안에 아규먼트를 기입한다.
+* 함수는 반환되어 종료되거나 끝부분까지 실행하여 종료되거나 둘 중 하나다.
+	- 반환하여 종료하는 것이 더 안전하다.
+	- `return` 실행 시 함수는 무조건 종료되어 호출하였던 부분으로 돌아간다.
+* 함수를 코드에 쓰게 되면 함수의 반환값이라는 의미를 가지게 된다.
+
+#### main 함수
+
+* 프로그램을 실행할 때 컴퓨터는 `main`함수부터 호출하면서 시작한다.
+* 메인함수의 리턴 값은 운영체제가 받는다. (윈도우xp or 리눅스)
+	- 정상적으로 종료되면 0, 비정상적으로 종료되면 1을 리턴한다.
+
+```c
+/* 마술 상자 */
+#include <stdio.h>
+int magicbox() {
+  i += 4;
+  return 0;
+}
+int main() {
+  int i;
+  printf("마술 상자에 집어넣을 값 : ");
+  scanf("%d", &i);
+
+  magicbox();
+  printf("마술 상자를 지나면 : %d \n", i);
+  return 0;
+}
+```
+
+* main 밖의 함수는 main 함수 안에서 정의된 변수를 알지 못한다.
+* 해당 변수에 대한 정보를 제공해야만 한다.
+
+```c
+/* 될까용 */
+#include <stdio.h>
+int slave(int my_money) {
+  my_money += 10000;
+  return my_money;
+}
+int main() {
+  int my_money = 100000;
+  printf("2009.12.12 재산 : $%d \n", slave(my_money));
+  printf("my_money : %d", my_money);
+
+  return 0;
+}
+```
+
+* 함수를 선언할 때 필요로 하는 변수를 파라미터(매개변수)라는 형태로 `()` 안에 선언한다. 
+* 함수를 호출 할 때 해당 파라미터에 대응하는 변수를 아규먼트(전달인자) 형태로 제공한다.
+* 각 함수 내부에서 선언된 변수들은 같은 값이더라도 서로 다른 변수이고 메모리 상에서도 다른 위치를 점유하고 있다.
+
+```
+// 문제1
+#include <stdio.h>
+
+int magicbox(int num)
+{
+	return num + 4;
+}
+
+int main()
+{
+	int num;
+	printf("input the number : ");
+	scanf_s("%d", &num);
+	// magicbox(num);
+	num = magicbox(num);
+	printf("sum : %d", num);
+
+	return 0;
+}
+```
+
+```c
+
+//문제 2
+#include <stdio.h>
+int slave(int total_money, int earned_money)
+{
+	total_money += earned_money;
+	return total_money;
+}
+int main()
+{
+	int total_money = 0;
+	int earned_money;
+	printf("input today income \n");
+	while(1)
+	{ 
+
+	scanf_s("%d", &earned_money);
+	if (earned_money == 0) break;
+	total_money = slave(total_money, earned_money);
+	printf("earned_money : %d \n total money : %d \n", earned_money, total_money);
+	}
+	return 0;
+}
+```
+
+```c
+#include <stdio.h>
+// 문제 3
+int sum_n(int n)
+{
+	int sum = 1;
+	for (int i = 1; i <= n; i++)
+	{
+		sum *= i;
+	}
+	return sum;
+}
+
+int main()
+{
+	int n = 0;
+	scanf_s("%d", &n);
+	printf("sum = %d", sum_n(n));
+	return 0;
+}
+```
+
+```c
+
+#include <stdio.h>
+// 문제 4
+int num_n(int n)
+{
+	int array[100] = {2, 3};
+	int count = 2;
+	int check = 1;
+	for (int i = 4; i <= n; i++)
+	{
+		for (int j = 0; j < count; j++)	if (i % array[j] == 0) check = 0;
+
+		if (check)
+		{
+			array[count] = i;
+			count++;
+		}
+		check = 1;
+	}
+
+	for (int i = 0; i < count; i++) printf("소수 : %d \n", array[i]);
+
+	return 0;
+}
+
+int main()
+{
+	int n = 0;
+	scanf_s("%d", &n);
+	num_n(n);
+	return 0;
+}
+```
+
+#### 함수와 포인터
+
+*포인터는 특정한 변수의 메모리 상의 주소값을 저장하는 변수이다.
+* int 형 변수의 주소값을 저장하면 int*, char 이면 char* 형태로 선언된다.
+* `*` 단항 연산자를 이용하여, 자신이 가리키는 변수를 지칭할 수 있다.
+* `&` 연산자를 이용하여 특정한 변수의 주소값을 알아낼 수 있다.
+
+```c
+/* 드디어 써먹는 포인터 */
+#include <stdio.h>
+int change_val(int *pi) {
+  printf("----- chage_val 함수 안에서 -----\n");
+  printf("pi 의 값 : %p \n", pi);
+  printf("pi 가 가리키는 것의 값 : %d \n", *pi);
+
+  *pi = 3;
+
+  printf("----- change_val 함수 끝~~ -----\n");
+  return 0;
+}
+int main() {
+  int i = 0;
+
+  printf("i 변수의 주소값 : %p \n", &i);
+  printf("호출 이전 i 의 값 : %d \n", i);
+  change_val(&i);
+  printf("호출 이후 i 의 값 : %d \n", i);
+
+  return 0;
+}
+```
+
+* 포인터로 정의된 함수의 파라미터인 `*pi`에 `i`의 주소값을 인자로 전달.
+* `pi`는 main함수의 `i`의 주소값(`i`)를 가리키게 된다.
+* 어떤 함수가 특정한 타입의 변수/배열의 값을 바꾸려면 
+함수의 인자는 반드시 그 타입을 가리키는 포인터를 이용해야 한다.
+
+```c
+/* 함수의 원형 */
+#include <stdio.h>
+int swap(int *a, int *b);  // 이 것이 바로 함수의 원형
+int main() {
+  int i, j;
+  i = 3;
+  j = 5;
+  printf("SWAP 이전 : i : %d, j : %d \n", i, j);
+  swap(&i, &j);
+  printf("SWAP 이후 : i : %d, j : %d \n", i, j);
+
+  return 0;
+}
+int swap(int *a, int *b) {
+  int temp = *a;
+
+  *a = *b;
+  *b = temp;
+
+  return 0;
+}
+```
+
+* 함수의 원형 : 컴파일러에서 함수에 대한 정보를 제공한다.
+* 소스 코드 제일 윗부분에 정의할 함수와 파라미터를 미리 적고 `;`를 붙여준다.
+* 프로그래머의 실수를 사전에 예방해주는 역할을 한다. 반드시 지킬 것.
+* 함수 원형은 함수가 int형 전달인자를 몇개 가진다는 사실을 컴파일러에게 알려주고, 컴파일러한테 필요한 메모리 공간을 할당받는다.
+    1. 컴파일러가 함수의 리턴값을 바르게 처리 
+    2. 사용자가 정확한 개수의 전달인자를 사용했는지 컴파일러가 검사 
+    3. 사용자가 정확한 데이터형의 전달인자를 사용했는지 컴파일러가 검사, 만약 정확하지 않으면 정확한 데이터형으로 변환
+
+```c
+#include <stdio.h>
+
+int add_number(int* parr);
+
+int main()
+{
+	int arr[3];
+	int i;
+
+	for (i = 0; i < 3; i++)
+	{
+		scanf_s("%d", &arr[i]);
+	}
+
+	add_number(arr);
+
+	printf("배열의 각 원소 : %d %d %d", arr[0], arr[1], arr[2]);
+
+	return 0;
+}
+
+int add_number(int* parr)
+{
+	int i;
+	for (i = 0; i < 3; i++)
+	{
+		parr[i]++;
+		// *(parr0+i)++;
+	}
+	return 0;
+}
+```
+
+* 특정한 타입의 값을 변경하는 함수를 제작하려면, 
+반드시 그 타입을 가리키는 포인터를 인자로 가져야 한다.
+	- arr 이라는 배열을 가리키는 포인터가 바로 add_number 의 인자로 와야 한다.
+	- int arr[3] 와 같은 일차원 배열을 가리키는 포인터는 바로 int* 형
+	- arr 은 배열의 시작 주소 값을 가지고 있다. (`arr = &arr[0]`)
+		- 즉 `parr`은 `arr` 배열의 시작 주소, `arr`을 가리키게 된다.
+	- `parr[i]` == `*(parr+i)` == `*(parr[0] + i)` == `*&(parr + i)` == `*&(arr + i)`
+	-  `char *p = &data[0]` == `char *p = & *(data + 0)` == 
+	`char *p = & * data` == `char *p = data`
+
+```c
+
+/* 눈 돌아가는 예제. 포인터가 가리키는 변수를 서로 바꾼다.  */
+#include <stdio.h>
+
+int pswap(int** pa, int** pb);
+int main() {
+	int a, b;
+	int* pa, * pb;
+
+	pa = &a;
+	pb = &b;
+
+	printf("pa 가 가리키는 변수의 주소값 : %p \n", pa);
+	printf("pa 의 주소값 : %p \n \n", &pa);
+	printf("pb 가 가리키는 변수의 주소값 : %p \n", pb);
+	printf("pb 의 주소값 : %p \n", &pb);
+
+	printf(" ------------- 호출 -------------- \n");
+	pswap(&pa, &pb);
+	printf(" ------------- 호출끝 -------------- \n");
+
+	printf("pa 가 가리키는 변수의 주소값 : %p \n", pa);
+	printf("pa 의 주소값 : %p \n \n", &pa);
+	printf("pb 가 가리키는 변수의 주소값 : %p \n", pb);
+	printf("pb 의 주소값 : %p \n", &pb);
+	return 0;
+}
+int pswap(int** ppa, int** ppb) {
+	int* temp = *ppa;
+
+	printf("ppa 가 가리키는 변수의 주소값 : %p \n", ppa);
+	printf("ppb 가 가리키는 변수의 주소값 : %p \n", ppb);
+
+	*ppa = *ppb;
+	*ppb = temp;
+
+	return 0;
+}
+```
+
+* `int*` 타입을 가리키는 포인터의 타입은 `int**` 타입. 
+* `ppa` 는 `pa` 를 가리키고 있고, `ppb` 는 `pb` 를 가리킨다.
+* `int*` 형인 `pa` 의 값을 보관하는 변수는 반드시 `int*`형이여야만 한다.
+
+```c
+/* 2 차원 배열의 각 원소를 1 씩 증가시키는 함수 */
+#include <stdio.h>
+/* 열의 개수가 2 개인 이차원 배열과, 총 행의 수를 인자로 받는다. */
+int add1_element(int (*arr)[2], int row);
+int main() {
+  int arr[3][2];
+  int i, j;
+
+  for (i = 0; i < 3; i++) {
+    for (j = 0; j < 2; j++) {
+      scanf("%d", &arr[i][j]);
+    }
+  }
+
+  add1_element(arr, 3);
+
+  for (i = 0; i < 3; i++) {
+    for (j = 0; j < 2; j++) {
+      printf("arr[%d][%d] : %d \n", i, j, arr[i][j]);
+    }
+  }
+  return 0;
+}
+int add1_element(int (*arr)[2], int row) {
+  int i, j;
+  for (i = 0; i < row; i++) {
+    for (j = 0; j < 2; j++) {
+      arr[i][j]++;
+    }
+  }
+
+  return 0;
+}
+```
+
+* 두 개의 인자. 
+	- 함수의 행의 수를 받는 인자.
+	- 열의 개수가 2 개인 이차원 배열을 가리키는 포인터, 
+* 함수의 인자에 한해서만 `int add1_element(int arr[][2], int row)`이 가능
+
+
+```c
+/* 상수를 인자로 받아들이기 */
+#include <stdio.h>
+int read_val(const int val);
+int main() {
+  int a;
+  scanf("%d", &a);
+  read_val(a);
+  return 0;
+}
+int read_val(const int val) {
+  val = 5;  // 허용되지 않는다.
+  return 0;
+}
+```
+
+* 상수의 값을 바꾸는 것은 불가능.
+
+```c
+/* 함수 포인터 */
+#include <stdio.h>
+
+int max(int a, int b);
+int main() {
+  int a, b;
+  int (*pmax)(int, int);
+  pmax = max;
+
+  scanf("%d %d", &a, &b);
+  printf("max(a,b) : %d \n", max(a, b));
+  printf("pmax(a,b) : %d \n", pmax(a, b));
+
+  return 0;
+}
+int max(int a, int b) {
+  if (a > b)
+    return a;
+  else
+    return b;
+
+  return 0;
+}
+```
+
+* 함수도 변수처럼 메모리 상에 저장되어 있다.
+* 함수 포인터는 함수의 시작 주소를 가리킨다.
+* 함수의 이름이 시작 주소값을 나타낸다.
+
+* 함수 포인터 pmax 는 함수의 리턴값이 int 형이고, 인자 두 개가 각각 int 인 함수를 가리킨다.
+* pmax 함수 포인터로 특정한 함수를 가리킬 때, 그 함수는 반드시 pmax 의 정의와 일치해야 한다. 
+* `(함수의 리턴형) (*포인터 이름)(첫번째 인자 타입, 두번째 인자 타입,....)
+// 만일 인자가 없다면 그냥 괄호 안을 비워두면 된다. 즉, int (*a)() 와 같이 하면 된다`
+* 정의가 일치하면 max 함수의 시작 주소값을 pmax 에 대입할 수 있게 된다.
+	- pmax = &max 와 같은 형식은 틀리다.
 
 ```c
 // 토이 프로젝트
@@ -2627,7 +3050,414 @@ int main()
 
 ---
 
-### 파일 입출력
+### 18. 파일 뽀개기
 
-* fputs, fgets
-*  fprintf, fscanf 
+* C 코드는 컴퓨터가 이해할 수 있는 언어로 바꿔주는 컴파일(compile)이라는 과정을 진행하게 된다.
+* 단일 소스 코드 전체를 어셈블리어 (기계어와 1 : 1 대응이 되어 있음) 로 변환해 준다.
+	- 목적코드라 불리는 확장자가 .o 인 파일이 생성. 
+* 이 과정이 끝나게 되면 링킹(linking) 이라는 과정이 진행.
+	-  말그대로 각기 다른 파일에 위치한 소스 코드들을 한데 엮어서 하나의 실행 파일로 만들어지는 과정
+* 링킹 과정에서 특정한 소스 파일에 있는 함수들이 어디어디에 있는지 찾는 과정을 거치게 된다.
+* 해당 함수선언(프로토타입) 선언해주어야지만 다른 파일의 함수를 호출하는 것이 가능해진다.
+
+#### 헤더 파일 
+
+* 명시해야 할 함수의 프로토 타입이 많을 시 헤더 파일로 정리할 수가 있다.
+	- `[파일 이름].h`
+		- 해당 파일 내부에 함수의 프로토타입을 몰아넣을 수 있다.
+	- `#include "[파일 이름].h"`
+		- 전처리기 명령은 컴파일 시작 전에 해당 헤더 파일 내부의 내용으로 바뀌어버린다.
+		- 함수를 호출하려는 파일, 함수가 있는 파일 모두 전처리기 명령을 해줘야 한다. 
+		- 사용자가 직접 제작한 헤더파일은 `""`로 감싸준다.
+
+---
+
+#### 19. void 형
+
+* `void`형으로 선언된 함수는 아무것도 리턴하지 않는 함수다.
+	- `void a(); int i = a();` 처럼 리턴값을 대입하려고 하면 에러가 발생한다. 
+* 리턴할 값이 없는 함수의 경우 `int`보다는 `void`를 사용해서 리턴값이 없다고 못을 박는 편이 편하다.
+
+* `void`형으로 변수를 선언할 수는 없다.
+	- 변수를 위해 메모리 상에 얼만큼의 공간을 할당할지 모르기 때문.
+	- 컴파일 때 모든 변수들의 메모리 상 위치가 결정되어야 한다.
+
+```c
+#include <stdio.h>
+int main() {
+  void *a;
+  double b = 123.3;
+
+  a = &b;
+
+  printf("%lf", *(double *)a);
+  return 0;
+}
+```
+* `void *` 형태는 가능하다.
+	- 포인터이기에 메모리 상에는 8비트를 차지하게 된다.
+	- 그 어떤 자료형의 주소값이든 전부 담을 수 있으나 값에 접근할 수는 없다. 
+* `void *`로 주소값에 해당하는 값을 읽으려면 자료형을 지정해주어야 한다.
+* 주소값 만을 담고 있는 a 에게 (double *) 를 취함으로써, 컴파일러로 하여금 "이 포인터 a 가 담고 있는 주소값은 double 을 가리키는 주소값이라 생각하게끔 만들 수 있다.
+* (double *)a 부분을 통해 컴파일러는 현재 a 가 가리키고 있는 곳의 주소값을 double 로 생각하게 되어 8 바이트를 읽어들이게 한다.
+* 순전히 주소값 만을 받기 위해서는 void 형 포인터를 사용하는 것이 좋다.
+
+---
+
+### 20. 동적 할당
+
+* 배열을 정할 때 그 크기는 언제나 컴파일 시간에 확정 되어 있어야 한다.
+* 필요한 공간보다 크게 메모리를 낭비하게 될 수도 있다.
+* 동적 메모리 할당
+	- 가변적으로 변할 수 있는 메모리를 할당한다.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char **argv) {
+  int SizeOfArray;
+  int *arr;
+
+  printf("만들고 싶은 배열의 원소의 수 : ");
+  scanf("%d", &SizeOfArray);
+
+  arr = (int *)malloc(sizeof(int) * SizeOfArray);
+  // int arr[SizeOfArray] 와 동일한 작업을 한 크기의 배열 생성
+
+  free(arr);
+
+  return 0;
+}
+```
+
+#### malloc
+
+```c
+#include <stdio.h>  /* printf, scanf, NULL */
+#include <stdlib.h> /* malloc, free*/
+
+int main() {
+  int i, n;
+  char* buffer;
+
+  printf("How long do you want the string? ");
+  scanf("%d", &i);
+
+  buffer = (char*)malloc(i + 1);
+  if (buffer == NULL) exit(1);
+
+  for (n = 0; n < i; n++) buffer[n] = rand() % 26 + 'a';
+  buffer[i] = '\0';
+
+  printf("Random string: %s\n", buffer);
+  free(buffer);
+
+  return 0;
+}
+```
+
+* 메모리를 할당한다.
+	- `void* malloc(size_t size);`
+* 인자로 전달된 크기 만큼의 메모리를 할당 한 후에, 그 메모리의 시작 주소값을 리턴한다.
+	- 해당 포인터의 타입은 언제나 void* 이기에, 사용자가 사용을 원하는 타입으로 캐스팅 해줘야만 한다.
+	- 메모리 할당에 실패하였을 경우, 널 포인터를 리턴한다.
+* 할당된 메모리는 초기화 되지 않았을 수 도 있다. 즉, 기존에 있었던 내용이 남아 있을 수 도 있다.
+* 만일 size 가 0 이라면, malloc 이 무엇을 리턴할지는 구현한 라이브러리 마다 다르다. 
+	- 어떤 경우 널 포인터를 리턴할 수 도 있고, 어떤 경우, 널이 아닌 포인터를 리턴하지만, 사용 불가능한 부분을 가리키고 있을 수 도 있다. 어떤 경우든, 해당 주소값을 사용하면 안된다.
+* 할당한 메모리는 반드시 free 로 해제 해줘야 한다.
+
+* 스택 이나, 데이타 영역, Read Only Data 부분은 당연하게도 malloc 함수가 결코 건드릴 수 없는 부분.
+* 이 부분의 크기는 반드시 컴파일 때에 100% 추호의 의심의 여지도 없이 정해져야 한다.
+* 모리의 힙 부분은 사용자가 자유롭게 할당하거나 해제할 수 있다. 따라서 우리의 malloc 함수는 이 힙에 위치하고 있다.
+
+#### 2 차원 배열의 동적 할당
+
+* 포인터 배열을 사용해서 2 차원 배열 처럼 동작하는 배열을 만드는 방법
+* 실제로 2 차원 배열 크기의 메모리를 할당한 뒤 2 차원 배열 포인터로 참조하는 방법
+
+```c
+/* 2 차원 배열의 동적 할당 */
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char **argv) {
+  int i;
+  int x, y;
+  int **arr;  // 우리는 arr[x][y] 를 만들 것이다.
+
+  printf("arr[x][y] 를 만들 것입니다.\n");
+  scanf("%d %d", &x, &y);
+
+  arr = (int **)malloc(sizeof(int *) * x);
+  // int* 형의 원소를 x 개 가지는 1 차원 배열 생성
+
+  for (i = 0; i < x; i++) {
+    arr[i] = (int *)malloc(sizeof(int) * y);
+  }
+
+  printf("생성 완료! \n");
+
+  for (i = 0; i < x; i++) {
+    free(arr[i]);
+  }
+  free(arr);
+
+  return 0;
+}
+```
+
+* 메모리에 연속적으로 존재하는 진짜 2 차원 배열을 만들기 위해서는 반드시 malloc 을 통해 해당 크기의 공간을 할당해야 함.
+```c
+int **arr;
+```
+* `int array[3]` 배열에서 `array`의 형은 `int *`
+* `int * arr[10]` 배열에서 `arr`의 형은 `int **arr`
+* `arr` 배열의 각 원소들은 ` int *` 형 이므로 다른 int 배열을 가리키게 되어 있음.
+```c
+for (i = 0; i < x; i++) {
+  arr[i] = (int *)malloc(sizeof(int) * y);
+}
+```
+* 각각의 원소(`int *`)들에 대해 메모리 공간을 할당시킴.
+```c
+int array(int **array);
+```
+* '2 차원 배열 처럼 생긴' 포인터 배열은 2 차원 배열과는 달리 함수의 인자로 손쉽게 넘길 수 있다.
+	- 2 차원 배열이 아닌 1 차원 배열들이기에 가능.
+	- arr 은 단순히 int * 형 원소들을 가지는 1 차원 배열. 
+			- 1 차원 배열을 함수의 인자로 넘겨줄 때 에는 크기를 써 주지 않아도 됨. 
+	- main 함수의 인자로 전달되는 argv 역시 이와 같은 성격을 띈다.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int     main(void)
+{
+    int i,j;
+    int **pptr = (int **)malloc(sizeof(int*) * 8);
+    for (i = 0; i < 8; i++)
+    {
+        *(pptr + i) = (int *)malloc(sizeof(int) * 6);
+    }
+    for (i = 0; i < 8; i++)
+    {
+        for (j = 0; j < 6; j++)
+        {
+            pptr[i][j] = i * 6 + j;
+        }
+    }
+        for (i = 0; i < 8; i++)
+    {
+        for (j = 0; j < 6; j++)
+        {
+            printf ("%3d",*(*(pptr + i)+j));
+        }
+        printf("\n");
+    }
+
+    for (i = 0; i <8; i++)
+    {
+        free(*(pptr + i));
+    }
+    return 0;
+}
+```
+* `int **pptr = (int **)malloc(sizeof(int*) * 8);`
+	- 2차원 배열을 가리키는 포인터 선언
+	- 8개의 배열이 하나하나 포인터 변수.
+	- 포인터 변수 하나하나가 int 형 배열을 가리킬 수 있다.
+```c
+for (i = 0; i < 8; i++)
+    {
+        *(pptr + i) = (int *)malloc(sizeof(int) * 6);
+    }
+```
+* 8개의 각 배열에 원소를 부여. (6개의 int형 원소)
+	- 
+```c
+    for (i = 0; i < 8; i++)
+    {
+        for (j = 0; j < 6; j++)
+        {
+            pptr[i][j] = i * 6 + j;
+        }
+    }
+```
+* `*(*(pptr + i)+j))` == `pptr[i][j]`
+* i는 j만큼의 원소를 가지고 있음.
+	- 2차원 배열처럼 연속적으로 할당되어있다고 보장할 수 없음.
+
+#### 배열 포인터와 포인터 배열
+* 배열 포인터
+```c
+    int arr[6][4];
+    int (*p)[4];
+    p = arr;
+    for (int i = 0; i < 6; i++)
+    {
+        printf ("p[%d] : %p\n", i, p[i]);
+    }
+```
+	- 포인터이다.
+	- 증감연산을 하면 배열의 원소만큼을 기본단위로 해서 움직인다.
+		- `int (*p)[3]` -> 3 * [sizeof(int)]
+		- `p++` -> p 주소값에 12만큼을 더하는 것
+* 포인터 배열
+```c
+int     print_array(int **array)
+{
+    int i, j;
+    printf ("pointer array by argument in function\n");
+    for (i = 0; i < 8; i++)
+    {
+        for (j = 0; j < 6; j++)
+        {
+            printf ("value : %d address : %p\n", *array[i], array[i]);
+            array[i]++;
+        }
+    }
+}
+int		main(void)
+{
+int i,j;
+    int **pptr = (int **)malloc(sizeof(int*) * 8);
+    for (i = 0; i < 8; i++)
+    {
+        *(pptr + i) = (int *)malloc(sizeof(int) * 6);
+    }
+	// wrong
+    printf ("after input\n");
+    for (i = 0; i < 8; i++)
+    {
+            printf ("%p\n",pptr[i]);
+        for (j = 0; j < 6; j++)
+        {
+			printf ("value : %d address : %p\n", pptr[i][j], pptr[i][j]);
+        }
+    }
+	// correct
+	    for (i = 0; i < 8; i++)
+    {
+            printf ("%p\n",pptr[i]);
+        for (j = 0; j < 6; j++)
+        {
+            printf ("value : %d address : %p\n", pptr[i][j], &pptr[i][j]);
+        }
+    }
+	// in function
+	print_array(pptr);
+}
+```
+	- 배열이다.
+	- 배열의 각 원소들이 모두 포인터이다.
+	- 각 원소들은 다른 일차원 배열들을 가리킬 수 있다.
+	- 2차원 배열처럼 주소값이 연속적으로 배치되어 있다고 장담할 수 없다.
+	- 1차원 배열들이기에 함수의 인자로 넘겨줄 수 있다.
+	- 각 [i]는 [j]만큼의 원소를 가지고 있는 배열의 주소의 시작 지점을([0]) 가리킨다.
+
+#### 구조체 동적 할당
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+struct Something {
+  int a, b;
+};
+int main() {
+  struct Something *arr;
+  int size, i;
+
+  printf("원하시는 구조체 배열의 크기 : ");
+  scanf("%d", &size);
+
+  arr = (struct Something *)malloc(sizeof(struct Something) * size);
+
+  for (i = 0; i < size; i++) {
+    printf("arr[%d].a : ", i);
+    scanf("%d", &arr[i].a);
+    printf("arr[%d].b : ", i);
+    scanf("%d", &arr[i].b);
+  }
+
+  for (i = 0; i < size; i++) {
+    printf("arr[%d].a : %d , arr[%d].b : %d \n", i, arr[i].a, i, arr[i].b);
+  }
+
+  free(arr);
+
+  return 0;
+}
+```
+
+#### 노드
+
+---
+
+### 21. 매크로 함수, 인라인 함수
+
+#### 매크로 함수
+
+```c
+/* 매크로 함수*/
+#include <stdio.h>
+#define square(x) x *x
+
+int main(int argc, char **argv) {
+  printf("square(3) : %d \n", square(3));
+
+  return 0;
+}
+```
+* `#define 함수 이름(인자) 치환할 것`
+
+#### 인라인 함수
+
+```
+/* 인라인 함수 */
+
+#include <stdio.h>
+__inline int square(int a) { return a * a; }
+int main(int argc, char **argv) {
+  printf("%d", square(3));
+
+  return 0;
+}
+```
+
+---
+
+### 22. 잡다한 키워드
+
+---
+
+### 23. 파일 입출력
+
+```c
+/* a.txt 에 내용을 기록한다. */
+#include <stdio.h>
+
+int main() {
+  FILE *fp;
+  fp = fopen("a.txt", "w");
+
+  if (fp == NULL) {
+    printf("Write Error!!\n");
+    return 0;
+  }
+
+  fputs("Hello World!!! \n", fp);
+
+  fclose(fp);
+  return 0;
+}
+```
+
+#### 스트림
+
+* 스트림은 이 두 개의 완전히 다른 장치들을 이어주는 파이프
+* 직접 구현해야 되는 것이 아니라 운영체제가 스스로 처리
+* 모니터에 A 를 출력하고 싶다면 단순히 스트림에 A 를 넣으면 된다. 왜냐하면 이렇게 스트림으로 전달된 문자 A 는 운영체제에 의해 알아서 모니터에 명령을 내려서 A 를 출력.
+* 모니터와 키보드에 대한 스트림은 표준 스트림(standard stream) 이라 해서 프로그램이 실행될 때 자동으로 생성
+* a.txt 의 경우 원래 존재 하지 않았을 것이므로 fopen 에서 a.txt 를 "w" 로 여는 순간 새로운 파일이 생성.
